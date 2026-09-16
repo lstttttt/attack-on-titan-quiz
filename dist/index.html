@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#151815">
+  <meta name="description" content="完成 20 道选择题，查看你与哪位《进击的巨人》角色最相似。">
+  <title>墙内人格档案｜角色匹配测试</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151815'/%3E%3Cpath d='M14 18h36v8H14zm4 14h28v8H18zm6 14h16v6H24z' fill='%23c8a66a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="返回测试首页">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><strong>墙内人格档案</strong><small>PERSONNEL ARCHIVE · 104</small></span>
+      </a>
+      <button class="soundless-button" id="resumeButton" type="button" hidden>继续上次测试</button>
+    </header>
+
+    <main id="app" aria-live="polite">
+      <section class="screen intro-screen is-active" id="introScreen">
+        <div class="intro-copy">
+          <p class="eyebrow"><span></span> 调查兵团 · 心理适性记录</p>
+          <h1>在墙倒下之前，<br><em>你会成为谁？</em></h1>
+          <p class="lead">20 个选择，记录你在压力、责任与未知面前的真实反应。最终生成角色匹配、人格维度与行动建议。</p>
+          <div class="intro-actions">
+            <button class="primary-button" id="startButton" type="button">开始测评 <span aria-hidden="true">→</span></button>
+            <p><strong>约 4 分钟</strong><span>答案仅保存在当前设备</span></p>
+          </div>
+        </div>
+        <aside class="dossier-card" aria-label="测评档案预览">
+          <div class="dossier-head">
+            <span>FILE / 850</span>
+            <span class="stamp">待鉴定</span>
+          </div>
+          <div class="portrait-placeholder" aria-hidden="true">
+            <span class="scan-line"></span>
+            <div class="profile-glyph"><span></span><span></span><span></span></div>
+          </div>
+          <dl>
+            <div><dt>测评维度</dt><dd>勇气 · 理性 · 忠诚 · 好奇</dd></div>
+            <div><dt>候选档案</dt><dd>10 位主要角色</dd></div>
+            <div><dt>结果形式</dt><dd>首位匹配 + 前三排名</dd></div>
+          </dl>
+          <div class="barcode" aria-hidden="true"></div>
+        </aside>
+      </section>
+
+      <section class="screen quiz-screen" id="quizScreen" aria-labelledby="questionText">
+        <aside class="quiz-meta">
+          <div class="progress-number"><strong id="currentNumber">01</strong><span>/ 20</span></div>
+          <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+          <p id="dimensionLabel">行动倾向</p>
+          <div class="field-note">
+            <span>作答提示</span>
+            <p>凭第一直觉选择。这里没有“正确答案”。</p>
+          </div>
+        </aside>
+
+        <div class="question-panel">
+          <div class="question-topline">
+            <span id="questionCode">Q-01</span>
+            <button class="text-button" id="exitButton" type="button">暂存并退出</button>
+          </div>
+          <h2 id="questionText"></h2>
+          <fieldset class="answer-list" id="answerList">
+            <legend class="sr-only">请选择你的认同程度</legend>
+          </fieldset>
+          <div class="quiz-footer">
+            <button class="secondary-button" id="prevButton" type="button">← 上一题</button>
+            <span>键盘可按 1—5 快速作答</span>
+            <button class="primary-button compact" id="nextButton" type="button" disabled>下一题 →</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen result-screen" id="resultScreen" aria-labelledby="resultTitle">
+        <div class="result-hero">
+          <p class="eyebrow"><span></span> 鉴定完成 · FINAL REPORT</p>
+          <div class="result-title-row">
+            <div>
+              <p>你的首位角色匹配</p>
+              <h1 id="resultTitle"></h1>
+              <div class="tag-list" id="tagList"></div>
+            </div>
+            <div class="match-score" aria-label="最高匹配度">
+              <strong id="topScore">0</strong><span>%</span><small>MATCH</small>
+            </div>
+          </div>
+          <p class="result-summary" id="resultSummary"></p>
+        </div>
+
+        <div class="result-grid">
+          <article class="report-card chart-card">
+            <div class="card-heading"><span>01</span><h2>你的能力轮廓</h2></div>
+            <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 360 300" role="img" aria-label="人格维度雷达图"></svg></div>
+          </article>
+          <article class="report-card ranking-card">
+            <div class="card-heading"><span>02</span><h2>角色匹配排名</h2></div>
+            <ol id="rankingList"></ol>
+          </article>
+          <article class="report-card advice-card">
+            <div class="card-heading"><span>03</span><h2>档案解读</h2></div>
+            <div class="advice-content" id="adviceContent"></div>
+          </article>
+        </div>
+
+        <div class="result-actions">
+          <button class="primary-button" id="copyButton" type="button">复制结果摘要</button>
+          <button class="secondary-button" id="restartButton" type="button">重新测试</button>
+        </div>
+        <p class="disclaimer">本测试用于娱乐与自我探索，不构成专业心理评估。角色与作品名称归原权利人所有。</p>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>WALL PERSONNEL ARCHIVE</span><span>基于两份研究报告整理 · 2026</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">结果已复制</div>
+  <script src="app.js"></script>
+</body>
+</html>
