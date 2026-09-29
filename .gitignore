@@ -1,0 +1,23 @@
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependency and tool caches
+node_modules/
+.vercel/
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local research notes and visual QA captures
+deep-research-report*.md
+desktop.png
+mobile.png
+result-*.png

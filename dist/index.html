@@ -90,25 +90,89 @@
             </div>
           </div>
           <p class="result-summary" id="resultSummary"></p>
+          <div class="result-verdict" id="resultVerdict"></div>
         </div>
 
-        <div class="result-grid">
-          <article class="report-card chart-card">
-            <div class="card-heading"><span>01</span><h2>你的能力轮廓</h2></div>
-            <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 360 300" role="img" aria-label="人格维度雷达图"></svg></div>
-          </article>
-          <article class="report-card ranking-card">
-            <div class="card-heading"><span>02</span><h2>角色匹配排名</h2></div>
-            <ol id="rankingList"></ol>
-          </article>
-          <article class="report-card advice-card">
-            <div class="card-heading"><span>03</span><h2>档案解读</h2></div>
+        <nav class="result-nav" aria-label="结果页导航">
+          <a href="#profileSection">人格剖面</a>
+          <a href="#rankingSection">角色排名</a>
+          <a href="#dossierSection">角色档案</a>
+          <a href="#growthSection">成长建议</a>
+        </nav>
+
+        <div class="result-content">
+          <section class="report-section" id="profileSection">
+            <div class="section-heading">
+              <span>01 / PROFILE</span>
+              <div><h2>你的人格剖面</h2><p>六项核心维度，展示你在压力与选择中的稳定倾向。</p></div>
+            </div>
+            <div class="profile-grid">
+              <article class="report-card chart-card">
+                <div class="card-heading"><span>A</span><h3>能力轮廓</h3></div>
+                <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 360 300" role="img" aria-label="人格维度雷达图"></svg></div>
+              </article>
+              <article class="report-card dimension-card">
+                <div class="card-heading"><span>B</span><h3>维度详解</h3></div>
+                <div class="dimension-list" id="dimensionList"></div>
+              </article>
+              <article class="report-card insight-card">
+                <div class="card-heading"><span>C</span><h3>关键洞察</h3></div>
+                <div class="insight-list" id="insightList"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="report-section" id="rankingSection">
+            <div class="section-heading">
+              <span>02 / MATCHES</span>
+              <div><h2>角色匹配排名</h2><p>不是单一标签，而是你身上最接近的三种角色模式。</p></div>
+            </div>
+            <ol class="ranking-cards" id="rankingList"></ol>
+          </section>
+
+          <section class="report-section" id="dossierSection">
+            <div class="section-heading">
+              <span>03 / DOSSIER</span>
+              <div><h2>首位角色档案</h2><p>理解角色的核心动机，也理解你们真正相似的部分。</p></div>
+            </div>
+            <div class="dossier-grid">
+              <article class="report-card role-bio-card">
+                <p class="archive-label">SUBJECT / <span id="roleCode"></span></p>
+                <h3 id="roleArchetype"></h3>
+                <p id="roleIntro"></p>
+                <blockquote id="roleCreed"></blockquote>
+              </article>
+              <article class="report-card compare-card">
+                <div class="card-heading"><span>VS</span><h3>你与角色的契合点</h3></div>
+                <div class="compare-list" id="compareList"></div>
+              </article>
+            </div>
+            <details class="timeline-panel">
+              <summary><span>查看角色关键经历</span><small>包含剧情剧透</small></summary>
+              <ol class="role-timeline" id="roleTimeline"></ol>
+            </details>
+          </section>
+
+          <section class="report-section" id="growthSection">
+            <div class="section-heading">
+              <span>04 / GROWTH</span>
+              <div><h2>把特质变成优势</h2><p>结果不是定论，而是下一次选择前的一面镜子。</p></div>
+            </div>
             <div class="advice-content" id="adviceContent"></div>
-          </article>
+          </section>
+
+          <details class="method-panel">
+            <summary>这份结果是怎么计算的？</summary>
+            <div>
+              <p>系统将 20 道答案转换为勇气、谋略、忠诚、共情、稳定与独立等人格维度，再与角色特征向量计算距离并归一化为匹配度。</p>
+              <p>匹配度表示行为风格的相近程度，不代表价值判断或临床心理结论。角色资料以原作与官方设定为优先参考，本页面仅作非商业娱乐与自我探索。</p>
+            </div>
+          </details>
         </div>
 
         <div class="result-actions">
           <button class="primary-button" id="copyButton" type="button">复制结果摘要</button>
+          <button class="secondary-button" id="printButton" type="button">打印 / 保存 PDF</button>
           <button class="secondary-button" id="restartButton" type="button">重新测试</button>
         </div>
         <p class="disclaimer">本测试用于娱乐与自我探索，不构成专业心理评估。角色与作品名称归原权利人所有。</p>

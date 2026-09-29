@@ -42,8 +42,29 @@ const roles = [
   { name:"安妮·莱昂哈特", short:"安妮", tags:["独立克制","现实清醒","精准行动"], profile:{courage:.78,loyalty:.46,empathy:.45,stability:.86,strategy:.74,curiosity:.4,independence:1,conviction:.68,discipline:.94,leadership:.34}, summary:"你不热衷于表态，更愿意观察、判断，然后精准行动。你珍惜独处与自主，也很少向外界暴露脆弱。", advice:["独立不等于隔绝","选择值得信任的少数关系，让支持成为选项，而不是风险。","把冷静用在沟通上","你看得清局势；提前说出底线，比沉默到最后再抽离更有效。"] }
 ];
 
+const roleDetails = {
+  "艾伦·耶格尔": { archetype:"自由驱动的破局者", intro:"一个把自由视为本能、会主动撞向边界的人。他的力量来自不接受既定答案，也因此需要不断辨认：眼前的代价是否仍服务于最初的信念。", creed:"如果世界不给答案，就亲自走到边界之外。", timeline:["从墙内少年到训练兵，以强烈目标推动自己不断行动。","在一次次失去与真相冲击中，承担起改变局势的力量。","对自由的追求逐渐走向极端，也让选择的代价成为核心命题。"] },
+  "米卡莎·阿克曼": { archetype:"沉默而坚定的守护者", intro:"在危机中异常稳定，把保护重要的人化为清晰行动。她的可靠来自训练、克制和忠诚，而成长课题是让自我选择不再只围绕某一个人。", creed:"真正的守护，也包括在关键时刻作出自己的选择。", timeline:["经历童年巨变后，将家人与归属视为最重要的锚点。","以顶尖能力加入训练兵团，多次在绝境中保护同伴。","最终必须在爱、责任与更大范围的生命之间作出独立决定。"] },
+  "阿尔敏·阿鲁雷特": { archetype:"看见第三条路的战略家", intro:"身体并非最强，却能用观察、推演与同理心改变战局。他相信理解世界是行动的前提，也愿意在无法两全时承担艰难的代价。", creed:"改变局面的关键，常藏在所有人忽略的可能性里。", timeline:["因对墙外世界的好奇，与伙伴共同踏上探索之路。","多次用推理识别敌人、说服盟友并制定逆转战局的方案。","从质疑自己走向承担领导责任，在理想与现实间寻找和平路径。"] },
+  "利威尔·阿克曼": { archetype:"极端环境中的执行者", intro:"冷静、精准、对责任有近乎苛刻的要求。他很少许诺确定答案，更重视在信息有限时作出选择，并让牺牲不被轻易浪费。", creed:"无法预知结果时，仍要为自己的选择负责。", timeline:["从地下街生存者成为调查兵团核心战力。","率领特别作战班，在高风险任务中反复面对失去。","长期背负战友的托付，将完成使命坚持到最后。"] },
+  "艾尔文·史密斯": { archetype:"以远方为坐标的统帅", intro:"擅长在不完整信息中布局，用清晰目标凝聚团队。他能承受多数人无法承担的决策压力，但个人愿望与集体利益之间始终存在尖锐张力。", creed:"领导不是掌握答案，而是在代价出现时仍然承担决定。", timeline:["因追寻世界真相加入调查兵团，并逐步成为团长。","通过长距离索敌、诱捕等战略重塑兵团作战方式。","在决定性战役中放下个人执念，率队完成最后的冲锋。"] },
+  "韩吉·佐耶": { archetype:"用好奇照亮未知的研究者", intro:"会把恐惧对象变成研究对象，用热情、实验和同理心拆解偏见。她的开放性让团队看见新路，也必须学习在探索欲与领导责任之间分配精力。", creed:"理解未知，往往是停止恐惧它的第一步。", timeline:["从憎恨巨人转向观察与研究，建立大量关键知识。","在实验与作战中不断用新证据挑战旧认知。","承担团长职责后，努力在真相、生命与现实压力间维持选择空间。"] },
+  "莱纳·布朗": { archetype:"在责任裂缝中前行的人", intro:"习惯成为可靠的支柱，却长期被相互冲突的身份与使命拉扯。他的坚韧不是从不崩溃，而是在破碎之后仍试图保护身边的人。", creed:"真正的坚强，不是没有矛盾，而是不再逃避它。", timeline:["作为战士候补接受任务，带着证明自己的愿望踏上岛屿。","在士兵与战士两种身份之间产生深刻分裂。","面对过去造成的伤害，开始从服从使命转向承担真实后果。"] },
+  "吉克·耶格尔": { archetype:"从系统层面落子的规划者", intro:"习惯抽离现场情绪，以宏观逻辑寻找改变结构的方案。他的长处是冷静布局，风险则是把真实的人压缩成理论中的数字。", creed:"看见系统的缺陷很重要，但别让方案忘记具体的人。", timeline:["在家庭期待与外部压力中形成对世界的悲观判断。","凭借情报与长期部署成为关键战略角色。","最终在与他人的连接中，重新触碰日常生命本身的意义。"] },
+  "希斯特莉亚·雷斯": { archetype:"以温柔建立边界的承担者", intro:"能敏锐感知他人的痛苦，也经历过用讨好换取存在感的阶段。她真正的力量来自拒绝被安排，并让善意成为主动选择。", creed:"善良不是扮演别人期待的样子，而是诚实地决定要守护什么。", timeline:["以克里斯塔身份生活，长期压抑真实需求以获得认可。","在重要关系中学会面对自己，并拒绝被他人当作工具。","承担女王责任，把个人觉醒转化为对弱者的长期保护。"] },
+  "安妮·莱昂哈特": { archetype:"把情绪藏进精准行动的人", intro:"独立、现实、不轻易暴露内心，习惯依靠训练与判断完成任务。冷淡表象之下仍保留共情，只是不愿让情感轻易左右生存。", creed:"保持距离能保护自己，但理解内心才能真正作出选择。", timeline:["在严格训练中掌握出色格斗能力，并以战士身份进入墙内。","长期潜伏并执行高风险任务，以克制维持秘密。","在重新面对世界后，开始承认牵挂并选择参与共同的未来。"] }
+};
+
 const dims = ["courage","strategy","loyalty","empathy","stability","independence"];
 const dimNames = { courage:"勇气", strategy:"谋略", loyalty:"忠诚", empathy:"共情", stability:"稳定", independence:"独立" };
+const dimNotes = {
+  courage:"面对风险时主动推进的倾向",
+  strategy:"在行动前规划、权衡与推演的倾向",
+  loyalty:"对承诺、伙伴与共同目标的投入",
+  empathy:"理解他人感受并寻找合作空间的倾向",
+  stability:"在压力中维持情绪与判断的能力",
+  independence:"不依赖群体意见、坚持自主判断的倾向"
+};
 const state = { index: 0, answers: Array(questions.length).fill(null) };
 const $ = (id) => document.getElementById(id);
 const screens = ["introScreen","quizScreen","resultScreen"];
@@ -116,20 +137,56 @@ function drawRadar(vector) {
   svg.innerHTML = grids + axes + shape + labels;
 }
 
+function closestDimensions(role, vector, limit = 2) {
+  return dims.slice().sort((a, b) => Math.abs((vector[a] ?? .5) - role.profile[a]) - Math.abs((vector[b] ?? .5) - role.profile[b])).slice(0, limit);
+}
+
+function matchReason(role, vector) {
+  const close = closestDimensions(role, vector, 2).map(key => dimNames[key]);
+  return `你们在${close.join("与")}上的表现最接近，同时都带有“${role.tags[0]}”的行动底色。`;
+}
+
+function renderDimensions(vector) {
+  $("dimensionList").innerHTML = dims.map(key => {
+    const score = Math.round((vector[key] ?? .5) * 100);
+    return `<div class="dimension-row" title="${dimNotes[key]}"><strong>${dimNames[key]}</strong><div class="dimension-meter"><i style="width:${score}%"></i></div><span>${score}</span></div>`;
+  }).join("");
+  const sorted = dims.slice().sort((a,b) => (vector[b] ?? .5) - (vector[a] ?? .5));
+  const high = sorted[0], support = sorted[1], low = sorted[sorted.length - 1];
+  $("insightList").innerHTML = [
+    ["主导优势", dimNames[high], `你的${dimNames[high]}得分最突出。${dimNotes[high]}是你在复杂局势中的首选资源。`],
+    ["辅助优势", dimNames[support], `${dimNames[support]}为主导特质提供支撑，让你的选择不只依赖单一反应。`],
+    ["潜在张力", dimNames[low], `${dimNames[low]}相对较低，这不是缺点，而是提醒你在相关情境中需要更有意识地补充视角。`]
+  ].map(item => `<div class="insight-item"><span>${item[0]}</span><h4>${item[1]}</h4><p>${item[2]}</p></div>`).join("");
+  return { sorted, high, support, low };
+}
+
 function renderResults() {
   const vector = userVector();
   const ranked = roles.map(role => ({...role, score: similarity(vector, role.profile)})).sort((a,b) => b.score - a.score);
   const top = ranked[0];
+  const detail = roleDetails[top.name];
   const displayScore = score => Math.round(60 + score * 38);
   $("resultTitle").textContent = top.name;
   $("topScore").textContent = displayScore(top.score);
   $("tagList").innerHTML = top.tags.map(tag => `<span>${tag}</span>`).join("");
   $("resultSummary").textContent = top.summary;
+  $("resultVerdict").innerHTML = `<span>行为原型：${detail.archetype}</span><span>次高匹配：${ranked[1].short}</span><span>结果区分度：${displayScore(top.score) - displayScore(ranked[1].score) <= 2 ? "多元型" : "清晰型"}</span>`;
   $("resultScreen").querySelector(".result-hero").dataset.initial = top.short.slice(0,1);
-  $("rankingList").innerHTML = ranked.slice(0,3).map((role, i) => `<li class="rank-row"><span class="rank-number">0${i+1}</span><div class="rank-name"><strong>${role.name}</strong><div class="rank-bar"><i style="width:${displayScore(role.score)}%"></i></div></div><span class="rank-score">${displayScore(role.score)}%</span></li>`).join("");
-  $("adviceContent").innerHTML = `<div class="advice-item"><span>CORE / 核心模式</span><h3>${top.tags[0]} × ${top.tags[1]}</h3><p>${top.summary}</p></div>${top.advice.map((item, i) => i % 2 === 0 ? `<div class="advice-item"><span>NOTE / 行动建议</span><h3>${item}</h3><p>${top.advice[i+1]}</p></div>` : "").join("")}`;
+  const dimensional = renderDimensions(vector);
+  $("rankingList").innerHTML = ranked.slice(0,3).map((role, i) => `<li class="rank-card"><div class="rank-card-head"><span class="rank-number">0${i+1}</span><span class="rank-score">${displayScore(role.score)}<small>%</small></span></div><h3>${role.name}</h3><p class="rank-archetype">${roleDetails[role.name].archetype}</p><p class="rank-reason">${matchReason(role, vector)}</p><div class="rank-bar"><i style="width:${displayScore(role.score)}%"></i></div></li>`).join("");
+  $("roleCode").textContent = `A-${String(roles.findIndex(role => role.name === top.name) + 1).padStart(2,"0")}`;
+  $("roleArchetype").textContent = detail.archetype;
+  $("roleIntro").textContent = detail.intro;
+  $("roleCreed").textContent = `“${detail.creed}”`;
+  $("roleTimeline").innerHTML = detail.timeline.map(event => `<li>${event}</li>`).join("");
+  $("compareList").innerHTML = dims.map(key => {
+    const userScore = Math.round((vector[key] ?? .5) * 100), roleScore = Math.round(top.profile[key] * 100);
+    return `<div class="compare-row"><strong>${dimNames[key]}</strong><div class="compare-track" aria-label="你 ${userScore}，角色 ${roleScore}"><i style="width:${userScore}%"></i><b style="width:${roleScore}%"></b></div><span class="compare-values">你 ${userScore}<br>角色 ${roleScore}</span></div>`;
+  }).join("");
+  $("adviceContent").innerHTML = `<div class="advice-item"><span>CORE / 核心模式</span><h3>${top.tags[0]} × ${top.tags[1]}</h3><p>${top.summary}</p></div>${top.advice.map((item, i) => i % 2 === 0 ? `<div class="advice-item"><span>ACTION / 行动建议</span><h3>${item}</h3><p>${top.advice[i+1]}</p></div>` : "").join("")}<div class="advice-item"><span>BALANCE / 平衡练习</span><h3>补充${dimNames[dimensional.low]}</h3><p>下一次遇到重要选择时，刻意多问一句：“如果我把${dimNames[dimensional.low]}也纳入考虑，会出现什么新选项？”</p></div>`;
   drawRadar(vector);
-  window.latestResult = `我的墙内人格档案：最像${top.name}（${displayScore(top.score)}%）。关键词：${top.tags.join("、")}。`;
+  window.latestResult = `我的墙内人格档案：最像${top.name}（${displayScore(top.score)}%），行为原型是“${detail.archetype}”。关键词：${top.tags.join("、")}。前三匹配：${ranked.slice(0,3).map(role => `${role.short} ${displayScore(role.score)}%`).join("、")}。核心优势：${dimNames[dimensional.high]}与${dimNames[dimensional.support]}。`;
   localStorage.setItem("wall-personality-result", JSON.stringify({ name: top.name, score: displayScore(top.score), tags: top.tags }));
   localStorage.removeItem("wall-personality-progress");
   $("resumeButton").hidden = true;
@@ -142,6 +199,7 @@ $("prevButton").addEventListener("click", () => { if (state.index > 0) { state.i
 $("nextButton").addEventListener("click", () => { if (state.answers[state.index] === null) return; if (state.index < questions.length - 1) { state.index++; renderQuestion(); saveState(); } else renderResults(); });
 $("exitButton").addEventListener("click", () => { saveState(); showScreen("introScreen"); });
 $("restartButton").addEventListener("click", () => startQuiz(false));
+$("printButton").addEventListener("click", () => window.print());
 $("copyButton").addEventListener("click", async () => {
   try { await navigator.clipboard.writeText(window.latestResult); $("toast").textContent = "结果已复制"; }
   catch { $("toast").textContent = "复制失败，请手动截图保存"; }
