@@ -4,184 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#151815">
-  <meta name="description" content="完成 20 道选择题，查看你与哪位《进击的巨人》角色最相似。">
-  <title>墙内人格档案｜角色匹配测试</title>
+  <meta name="description" content="在 16 个墙内处境中作出选择，看看你的行动方式更接近哪位角色。非官方同人娱乐测试。">
+  <title>墙内人格档案｜非官方角色匹配测试</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151815'/%3E%3Cpath d='M14 18h36v8H14zm4 14h28v8H18zm6 14h16v6H24z' fill='%23c8a66a'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="page-shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="返回测试首页">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span><strong>墙内人格档案</strong><small>PERSONNEL ARCHIVE · 104</small></span>
-      </a>
-      <button class="soundless-button" id="resumeButton" type="button" hidden>继续上次测试</button>
+      <a class="brand" href="#" aria-label="返回测试首页"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span><strong>墙内人格档案</strong><small>UNOFFICIAL CHARACTER ARCHIVE</small></span></a>
+      <button class="soundless-button" id="resumeButton" type="button" hidden>继续上次选择</button>
     </header>
-
     <main id="app" aria-live="polite">
       <section class="screen intro-screen is-active" id="introScreen">
         <div class="intro-copy">
-          <p class="eyebrow"><span></span> 调查兵团 · 心理适性记录</p>
-          <h1>在墙倒下之前，<br><em>你会成为谁？</em></h1>
-          <p class="lead">20 个选择，记录你在压力、责任与未知面前的真实反应。最终生成角色匹配、人格维度与行动建议。</p>
-          <div class="intro-actions">
-            <button class="primary-button" id="startButton" type="button">开始测评 <span aria-hidden="true">→</span></button>
-            <p><strong>约 4 分钟</strong><span>答案仅保存在当前设备</span></p>
-          </div>
+          <p class="eyebrow"><span></span> 墙内人物档案 · 非官方同人测试</p>
+          <h1>如果身处墙内，<br><em>你会怎样作出选择？</em></h1>
+          <p class="lead">在同伴、未知和必须承担的决定之间，看看你的选择更接近谁。每个选项都有理由，也都有代价。</p>
+          <div class="intro-actions"><button class="primary-button" id="startButton" type="button">开始测试</button><p><strong>16 个处境 · 约 5 分钟</strong><span>无标准答案，进度只保存在当前设备</span></p></div>
         </div>
-        <aside class="dossier-card" aria-label="测评档案预览">
-          <div class="dossier-head">
-            <span>FILE / 850</span>
-            <span class="stamp">待鉴定</span>
-          </div>
-          <div class="portrait-placeholder" aria-hidden="true">
-            <span class="scan-line"></span>
-            <div class="profile-glyph"><span></span><span></span><span></span></div>
-          </div>
-          <dl>
-            <div><dt>测评维度</dt><dd>勇气 · 理性 · 忠诚 · 好奇</dd></div>
-            <div><dt>候选档案</dt><dd>10 位主要角色</dd></div>
-            <div><dt>结果形式</dt><dd>首位匹配 + 前三排名</dd></div>
-          </dl>
+        <aside class="dossier-card locked-dossier" aria-label="未解锁人物档案预览">
+          <div class="dossier-head"><span>FILE / UNKNOWN</span><span class="stamp">未解锁</span></div>
+          <div class="locked-portrait" aria-hidden="true"><img src="assets/chibi/armin.png" alt=""><span class="scan-line"></span><strong>?</strong></div>
+          <dl><div><dt>观察范围</dt><dd>行动 · 责任 · 求知 · 信任</dd></div><div><dt>候选档案</dt><dd>10 位角色</dd></div><div><dt>揭晓方式</dt><dd>首位角色 + 次近侧影</dd></div></dl>
           <div class="barcode" aria-hidden="true"></div>
         </aside>
       </section>
 
       <section class="screen quiz-screen" id="quizScreen" aria-labelledby="questionText">
         <aside class="quiz-meta">
-          <div class="progress-number"><strong id="currentNumber">01</strong><span>/ 20</span></div>
-          <div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div>
-          <p id="dimensionLabel">行动倾向</p>
-          <div class="field-note">
-            <span>作答提示</span>
-            <p>凭第一直觉选择。这里没有“正确答案”。</p>
-          </div>
+          <div class="progress-number"><strong id="currentNumber">01</strong><span>/ 16</span></div><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div><p id="dimensionLabel">行动与风险</p>
+          <div class="field-note"><span>选择提示</span><p>选你最可能做的事，而不是看起来最正确的事。</p></div>
         </aside>
-
         <div class="question-panel">
-          <div class="question-topline">
-            <span id="questionCode">Q-01</span>
-            <button class="text-button" id="exitButton" type="button">暂存并退出</button>
-          </div>
+          <div class="question-topline"><span id="questionCode">SCENE-01</span><button class="text-button" id="exitButton" type="button">暂存并退出</button></div>
           <h2 id="questionText"></h2>
-          <fieldset class="answer-list" id="answerList">
-            <legend class="sr-only">请选择你的认同程度</legend>
-          </fieldset>
-          <div class="quiz-footer">
-            <button class="secondary-button" id="prevButton" type="button">← 上一题</button>
-            <span>键盘可按 1—5 快速作答</span>
-            <button class="primary-button compact" id="nextButton" type="button" disabled>下一题 →</button>
-          </div>
+          <fieldset class="answer-list scenario-options" id="answerList"><legend class="sr-only">请选择你最可能采取的行动</legend></fieldset>
+          <div class="quiz-footer"><button class="secondary-button" id="prevButton" type="button">上一题</button><span>键盘可按 1—4 快速选择，Enter 继续</span><button class="primary-button compact" id="nextButton" type="button" disabled>下一题</button></div>
         </div>
       </section>
 
       <section class="screen result-screen" id="resultScreen" aria-labelledby="resultTitle">
-        <div class="result-hero">
-          <p class="eyebrow"><span></span> 鉴定完成 · FINAL REPORT</p>
-          <div class="result-title-row">
-            <div>
-              <p>你的首位角色匹配</p>
-              <h1 id="resultTitle"></h1>
-              <div class="tag-list" id="tagList"></div>
-            </div>
-            <div class="match-score" aria-label="最高匹配度">
-              <strong id="topScore">0</strong><span>%</span><small>MATCH</small>
-            </div>
+        <div class="result-reveal" id="resultReveal">
+          <div class="character-stage" id="characterStage"><div class="character-plate" aria-hidden="true"></div><div class="file-cover" aria-hidden="true"><span>ARCHIVE / OPEN</span></div><img id="resultCharacter" src="" alt="" width="1024" height="1536"><span class="character-shadow" aria-hidden="true"></span></div>
+          <div class="result-copy">
+            <p class="eyebrow"><span></span> 你的角色侧影</p><p class="result-kicker">你更接近</p><h1 id="resultTitle"></h1><h2 id="resultVerdict"></h2><p class="result-summary" id="resultSummary"></p><p class="result-cost" id="resultCost"></p><div class="evidence-chips" id="evidenceChips"></div>
           </div>
-          <p class="result-summary" id="resultSummary"></p>
-          <div class="result-verdict" id="resultVerdict"></div>
         </div>
-
-        <nav class="result-nav" aria-label="结果页导航">
-          <a href="#profileSection">人格剖面</a>
-          <a href="#rankingSection">角色排名</a>
-          <a href="#dossierSection">角色档案</a>
-          <a href="#growthSection">成长建议</a>
-        </nav>
-
-        <div class="result-content">
-          <section class="report-section" id="profileSection">
-            <div class="section-heading">
-              <span>01 / PROFILE</span>
-              <div><h2>你的人格剖面</h2><p>六项核心维度，展示你在压力与选择中的稳定倾向。</p></div>
-            </div>
-            <div class="profile-grid">
-              <article class="report-card chart-card">
-                <div class="card-heading"><span>A</span><h3>能力轮廓</h3></div>
-                <div class="radar-wrap"><svg id="radarChart" viewBox="0 0 360 300" role="img" aria-label="人格维度雷达图"></svg></div>
-              </article>
-              <article class="report-card dimension-card">
-                <div class="card-heading"><span>B</span><h3>维度详解</h3></div>
-                <div class="dimension-list" id="dimensionList"></div>
-              </article>
-              <article class="report-card insight-card">
-                <div class="card-heading"><span>C</span><h3>关键洞察</h3></div>
-                <div class="insight-list" id="insightList"></div>
-              </article>
-            </div>
-          </section>
-
-          <section class="report-section" id="rankingSection">
-            <div class="section-heading">
-              <span>02 / MATCHES</span>
-              <div><h2>角色匹配排名</h2><p>不是单一标签，而是你身上最接近的三种角色模式。</p></div>
-            </div>
-            <ol class="ranking-cards" id="rankingList"></ol>
-          </section>
-
+        <nav class="result-nav compact-result-nav" aria-label="结果页导航"><a href="#dossierSection">人物档案</a><a href="#analysisSection">更多分析</a></nav>
+        <div class="result-content streamlined-result">
           <section class="report-section" id="dossierSection">
-            <div class="section-heading">
-              <span>03 / DOSSIER</span>
-              <div><h2>首位角色档案</h2><p>理解角色的核心动机，也理解你们真正相似的部分。</p></div>
-            </div>
-            <div class="dossier-grid">
-              <article class="report-card role-bio-card">
-                <p class="archive-label">SUBJECT / <span id="roleCode"></span></p>
-                <h3 id="roleArchetype"></h3>
-                <p id="roleIntro"></p>
-                <blockquote id="roleCreed"></blockquote>
-              </article>
-              <article class="report-card compare-card">
-                <div class="card-heading"><span>VS</span><h3>你与角色的契合点</h3></div>
-                <div class="compare-list" id="compareList"></div>
-              </article>
-            </div>
-            <details class="timeline-panel">
-              <summary><span>查看角色关键经历</span><small>包含剧情剧透</small></summary>
-              <ol class="role-timeline" id="roleTimeline"></ol>
-            </details>
+            <div class="section-heading"><span>01 / DOSSIER</span><div><h2>人物档案</h2><p>你们相似的不是标签，而是在压力里反复作出的选择。</p></div></div>
+            <div class="story-grid"><article class="story-card"><span>相似之处</span><h3 id="similarityTitle"></h3><p id="similarityText"></p></article><article class="story-card contrast"><span>差异与代价</span><h3 id="costTitle"></h3><p id="costText"></p></article></div>
+            <article class="role-file-card"><div><p class="archive-label">SUBJECT / <span id="roleCode"></span></p><h3 id="roleArchetype"></h3><p id="roleIntro"></p></div><div class="archive-comment"><span>档案评语</span><p id="roleCreed"></p></div></article>
+            <details class="timeline-panel"><summary><span>查看关键经历</span><small>包含后期剧情</small></summary><ol class="role-timeline" id="roleTimeline"></ol></details>
           </section>
-
-          <section class="report-section" id="growthSection">
-            <div class="section-heading">
-              <span>04 / GROWTH</span>
-              <div><h2>把特质变成优势</h2><p>结果不是定论，而是下一次选择前的一面镜子。</p></div>
-            </div>
-            <div class="advice-content" id="adviceContent"></div>
-          </section>
-
-          <details class="method-panel">
-            <summary>这份结果是怎么计算的？</summary>
-            <div>
-              <p>系统将 20 道答案转换为勇气、谋略、忠诚、共情、稳定与独立等人格维度，再与角色特征向量计算距离并归一化为匹配度。</p>
-              <p>匹配度表示行为风格的相近程度，不代表价值判断或临床心理结论。角色资料以原作与官方设定为优先参考，本页面仅作非商业娱乐与自我探索。</p>
-            </div>
-          </details>
+          <section class="report-section alternatives-section"><div class="section-heading"><span>02 / ECHOES</span><div><h2>你也有这些角色的侧影</h2><p>次近角色不是第二名，而是你在另一种处境中可能采取的姿态。</p></div></div><div class="alternative-roles" id="alternativeRoles"></div></section>
+          <section class="report-section continuation-section"><div class="section-heading"><span>03 / NEXT</span><div><h2>如果故事继续</h2></div></div><div class="continuation-note"><p id="continuationText"></p></div></section>
+          <details class="analysis-panel" id="analysisSection"><summary><span>查看选择分析</span><small>维度、计分方法与说明</small></summary><div class="analysis-body"><div class="dimension-list" id="dimensionList"></div><div class="method-copy"><h3>结果如何得出</h3><p>每个处境的四种行动分别连接到不同角色倾向和六项选择维度。系统综合 16 次选择，比较角色关联与行动轮廓；同分时按角色关联次数、再按轮廓接近程度排序。</p><p>页面不显示“像某角色多少百分比”，因为这些分数不是概率，也未经过心理量表校准。本测试是非官方同人娱乐内容，不代表正式心理测评或官方设定结论。</p></div></div></details>
         </div>
-
-        <div class="result-actions">
-          <button class="primary-button" id="copyButton" type="button">复制结果摘要</button>
-          <button class="secondary-button" id="printButton" type="button">打印 / 保存 PDF</button>
-          <button class="secondary-button" id="restartButton" type="button">重新测试</button>
-        </div>
-        <p class="disclaimer">本测试用于娱乐与自我探索，不构成专业心理评估。角色与作品名称归原权利人所有。</p>
+        <div class="result-actions"><button class="primary-button" id="saveCardButton" type="button">保存结果卡</button><button class="secondary-button" id="copyButton" type="button">复制结果文案</button><button class="secondary-button" id="restartButton" type="button">重新测试</button></div>
+        <p class="disclaimer">非官方同人娱乐测试。人物与作品名称归原权利人所有；Q 版素材为生成式创作候选稿，不暗示官方授权。</p>
       </section>
     </main>
-
-    <footer class="site-footer"><span>WALL PERSONNEL ARCHIVE</span><span>基于两份研究报告整理 · 2026</span></footer>
+    <footer class="site-footer"><span>WALL CHARACTER ARCHIVE</span><span>UNOFFICIAL FAN PROJECT · 2026</span></footer>
   </div>
-  <div class="toast" id="toast" role="status" aria-live="polite">结果已复制</div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <canvas id="shareCanvas" width="1080" height="1440" hidden></canvas>
   <script src="app.js"></script>
 </body>
 </html>

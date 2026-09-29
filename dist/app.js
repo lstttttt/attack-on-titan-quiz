@@ -1,261 +1,269 @@
+const choice = (text, signal, primary, secondary) => ({ text, signal, roles: [[primary, 2], [secondary, 1]] });
+
 const questions = [
-  { text: "紧急情况下，我通常会立刻采取行动，即使需要自己承担风险。", dimension: "勇气", key: "courage" },
-  { text: "当集体处于危机中，我愿意牺牲个人利益换取更多人的安全。", dimension: "责任与牺牲", key: "loyalty" },
-  { text: "我通常愿意先相信伙伴，并把重要任务交给他们。", dimension: "合作与信任", key: "empathy" },
-  { text: "遭到背叛后，我很难真正放下，会长久记得这件事。", dimension: "情绪与宽恕", key: "stability", reverse: true },
-  { text: "面对复杂任务，我喜欢先做完整计划，再开始行动。", dimension: "计划与理性", key: "strategy" },
-  { text: "遇到未知事物时，我会忍不住追问它背后的真相。", dimension: "好奇与开放", key: "curiosity" },
-  { text: "即使周围一片混乱，我也能保持冷静并继续判断。", dimension: "压力与稳定", key: "stability" },
-  { text: "即使权威已经下令，我仍会在必要时提出质疑。", dimension: "独立判断", key: "independence" },
-  { text: "越是强大的对手，越能激起我的斗志。", dimension: "竞争与行动", key: "courage" },
-  { text: "我有清晰的是非判断，不容易因为现场情绪改变立场。", dimension: "信念与决断", key: "conviction" },
-  { text: "压力越大，我越容易怀疑自己的能力。", dimension: "压力与稳定", key: "stability", reverse: true },
-  { text: "与同伴意见冲突时，我会先理解对方，再寻找共同方案。", dimension: "合作与同理", key: "empathy" },
-  { text: "我更愿意独自把问题解决，而不是等待团队帮助。", dimension: "独立与距离", key: "independence" },
-  { text: "即使会让自己陷入不利，我也会优先帮助处境更弱的人。", dimension: "保护与利他", key: "loyalty" },
-  { text: "只要目标值得，我愿意接受长期、枯燥而严格的训练。", dimension: "自律与尽责", key: "discipline" },
-  { text: "比起让仇恨延续，我更愿意在适当的时候选择放下。", dimension: "情绪与宽恕", key: "empathy" },
-  { text: "为了长远目标，我能接受眼前的损失与误解。", dimension: "战略与牺牲", key: "strategy" },
-  { text: "面对没有答案的未知，我感到兴奋而不是退缩。", dimension: "探索与开放", key: "curiosity" },
-  { text: "情绪强烈时，我有时会先行动，之后才考虑后果。", dimension: "冲动与克制", key: "discipline", reverse: true },
-  { text: "团队陷入混乱时，我愿意站出来做决定并承担结果。", dimension: "领导与责任", key: "leadership" }
+  { dimension:"行动与风险", text:"撤离信号已经发出，一名队友还没有回来。你只知道他最后出现的位置。", options:[
+    choice("立刻折返，自己承担落队的风险。","在同伴失联时选择亲自折返","eren","mikasa"),
+    choice("带队按原路线撤离，同时请求最近的小队搜索。","先维持撤离秩序，再调动支援","levi","erwin"),
+    choice("先确认最后线索，判断是否还有安全折返的窗口。","先核对线索，再决定是否冒险","armin","annie"),
+    choice("向指挥者报告，争取暂停撤离并重新分工。","把救援变成团队共同承担的任务","historia","hange")
+  ]},
+  { dimension:"真相与责任", text:"你发现一份记录与公开解释对不上，但立刻公开可能使队伍失去信任。", options:[
+    choice("保存证据，继续查证其他记录。","面对矛盾记录时选择继续求证","hange","armin"),
+    choice("直接提出疑点，让所有人参与判断。","宁愿承受震荡也要公开疑点","eren","historia"),
+    choice("先找最相关的人核实，避免无根据的扩散。","先小范围核实，再决定是否公开","annie","levi"),
+    choice("先稳定眼前行动，把追查放到任务之后。","把当前秩序放在真相之前","erwin","reiner")
+  ]},
+  { dimension:"命令与自主", text:"上级给出的路线很稳妥，但你发现一个能明显缩短时间、风险也更高的方案。", options:[
+    choice("提出新方案；若无人同意，就自己先证明它可行。","在稳妥命令前仍想主动破局","eren","historia"),
+    choice("执行原路线，除非现场出现明确变化。","在信息不足时先维持可执行的命令","levi","mikasa"),
+    choice("快速列出两种方案的后果，请团队共同校验。","把方案差异摊开给团队判断","armin","hange"),
+    choice("保留新方案作为备用，不让队伍在出发前分裂。","把冒险方案留作局势恶化时的后手","erwin","reiner")
+  ]},
+  { dimension:"资源与公平", text:"补给只够支撑一个方向：救助附近居民，或保证主力小队继续执行任务。", options:[
+    choice("优先救助眼前的人，任务可以重新想办法。","先保护眼前具体的人","historia","mikasa"),
+    choice("保证主力任务；成功后才可能救更多人。","用整体收益衡量眼前损失","zeke","erwin"),
+    choice("拆分补给，重新设计一个能同时维持两边的最低方案。","试图找到不必二选一的资源方案","armin","hange"),
+    choice("按既定优先级执行，避免临场情绪改变规则。","让事先规则压过临场情绪","levi","annie")
+  ]},
+  { dimension:"敌意与理解", text:"一个曾与你敌对的人愿意提供情报，但拒绝解释自己的真正目的。", options:[
+    choice("继续交谈，从细节里判断他真正害怕什么。","把敌意对象当作需要理解的信息源","hange","armin"),
+    choice("只验证情报，不给对方接触核心成员的机会。","有限使用情报，同时保持边界","annie","levi"),
+    choice("要求他先用行动证明立场，否则不合作。","要求对方用行动证明立场","eren","mikasa"),
+    choice("给一次受控合作机会，但由团队共同承担风险。","允许有限信任并让风险被共同承担","reiner","historia")
+  ]},
+  { dimension:"失败与修正", text:"你主导的计划失败了，队伍只剩很短时间重新行动。", options:[
+    choice("立刻带头尝试最直接的突破口。","计划失败后先用行动打开缺口","eren","mikasa"),
+    choice("承认原判断失效，迅速收集现场的新信息。","愿意推翻自己的判断重新观察","hange","armin"),
+    choice("先收拢队形，执行最熟悉、失误率最低的动作。","失败后先恢复秩序与基本动作","levi","annie"),
+    choice("重新明确唯一目标，舍弃已经无法兼顾的部分。","危机中重新聚焦唯一目标","erwin","reiner")
+  ]},
+  { dimension:"同伴与界限", text:"一名伙伴情绪濒临崩溃，却坚持继续承担关键位置。", options:[
+    choice("陪在他身边，必要时替他接下任务。","在伙伴崩溃时选择贴身守护","mikasa","historia"),
+    choice("明确告诉他现在不适合继续，并立即换人。","用明确边界阻止伙伴继续硬撑","levi","annie"),
+    choice("先听完他的顾虑，再一起决定还能承担哪一部分。","先理解感受，再重分任务","armin","hange"),
+    choice("让他自己决定，但告诉他后果不会由他独自承担。","尊重伙伴选择，同时共同承担后果","reiner","eren")
+  ]},
+  { dimension:"领导与分工", text:"队伍意见完全分裂，而所有人都等着你给出下一步。", options:[
+    choice("迅速定下方向，清楚说明代价由自己承担。","在分歧中直接决断并承担责任","erwin","levi"),
+    choice("先指出双方都忽略的条件，再提出第三种方案。","在两派之间寻找被遗漏的选项","armin","hange"),
+    choice("让最了解现场的人决定，自己负责保护执行者。","把决定交给更了解现场的人","mikasa","historia"),
+    choice("缩小目标，只决定此刻必须完成的一步。","把混乱问题压缩成眼前一步","annie","zeke")
+  ]},
+  { dimension:"未知与秩序", text:"你们找到一处未知区域，继续探索可能获得关键答案，也可能错过返程时间。", options:[
+    choice("继续深入；机会消失后可能再也不会回来。","面对未知时愿意抓住短暂窗口","eren","hange"),
+    choice("记录入口和已知条件，制定下一次完整探索计划。","先留下证据，为下一次探索布局","armin","erwin"),
+    choice("按时返程，不让好奇心打乱整个队伍。","让既定返程秩序约束好奇心","levi","annie"),
+    choice("由少数人短暂确认，其余人先撤离。","把探索风险集中在少数人身上","mikasa","reiner")
+  ]},
+  { dimension:"牺牲与边界", text:"一个高风险动作能显著提高全队生还机会，但执行者很可能无法撤离。", options:[
+    choice("如果必须有人去，自己先站出来。","把高风险任务先放到自己肩上","eren","mikasa"),
+    choice("选择最有成功条件的人，并向所有人说明判断依据。","把整体生还概率放在个体感受之前","zeke","erwin"),
+    choice("继续寻找能降低牺牲概率的替代方案，直到最后时限。","在最后时限前仍寻找减损方案","armin","historia"),
+    choice("执行最有效方案，不用空洞承诺掩盖风险。","承认代价后执行最有效的方案","levi","annie")
+  ]},
+  { dimension:"信念与质疑", text:"多数人支持一个你认为有问题的决定，但你暂时拿不出完整证据。", options:[
+    choice("明确反对，先阻止不可逆的行动。","证据不足时仍先阻止不可逆后果","eren","historia"),
+    choice("提出关键疑问，让大家看见判断里的空白。","用问题让群体重新检查盲点","armin","hange"),
+    choice("先接受决定，同时暗中准备失败后的替代方案。","以结果为先，接受暂时不被理解","zeke","erwin"),
+    choice("只陈述自己确认的事实，不用情绪争夺支持。","只用确认事实表达异议","levi","mikasa")
+  ]},
+  { dimension:"错误与承担", text:"任务失败与你的判断有关，但公开全部经过会让队伍对你失去信心。", options:[
+    choice("完整说明经过，不为自己删掉难看的部分。","不删减地承担自己的错误","reiner","mikasa"),
+    choice("先说明关键错误和补救方案，细节随后公开。","先交代错误与补救，再补全细节","armin","historia"),
+    choice("不解释情绪，只把下一步修正落实到行动。","用后续行动承担而非辩解","levi","annie"),
+    choice("承担责任，但不让团队在行动前陷入追责。","把追责推迟到危机之后","erwin","hange")
+  ]},
+  { dimension:"谈判与底线", text:"对方愿意停手，但条件会让你的一部分同伴认为自己被背叛。", options:[
+    choice("继续谈，先弄清哪些条件还能改变。","在不完美谈判中继续寻找空间","armin","historia"),
+    choice("接受能减少整体伤亡的条件，并承担骂名。","为减少整体损失接受骂名","erwin","zeke"),
+    choice("拒绝用同伴的信任交换短暂安全。","不愿用同伴信任换取眼前安全","eren","mikasa"),
+    choice("只接受可验证、可撤回的部分，不做长期承诺。","只接受可验证且可撤回的合作","annie","levi")
+  ]},
+  { dimension:"时间与判断", text:"警报响起，你只有一分钟决定：立即行动，还是等一条尚未确认的消息。", options:[
+    choice("立即行动，错误可以在途中修正。","时间紧迫时先行动再修正","eren","mikasa"),
+    choice("按已知最可靠的流程行动，不赌未知消息。","在时限内依靠可靠流程","levi","annie"),
+    choice("用这最后一分钟验证消息来源。","把最后时间用来验证关键信息","armin","hange"),
+    choice("同时布置两手准备，在消息到来时切换。","在信息到来前保留两套方案","erwin","reiner")
+  ]},
+  { dimension:"个人与集体", text:"你最在意的人和队伍的整体安排发生冲突，而两边都无法保证安全。", options:[
+    choice("优先守在重要的人身边，至少不让他独自面对。","当个人与集体冲突时选择守在身边","mikasa","reiner"),
+    choice("服从整体安排，因为没人能只为自己例外。","让整体安排压过个人牵挂","zeke","erwin"),
+    choice("坦白冲突，请团队一起调整分工。","公开个人牵挂并请求重新分工","historia","armin"),
+    choice("接受无法两全，选择自己最能控制的那一边。","在无法两全时选择可控的一边","annie","levi")
+  ]},
+  { dimension:"胜利与真相", text:"任务结束后，你发现胜利建立在一个被隐瞒的事实之上。", options:[
+    choice("继续追查；没有弄清事实，就不能定义这次胜利。","胜利之后仍继续追问真相","hange","armin"),
+    choice("先判断公开事实会改变什么，再决定时机。","从全局后果判断公开时机","erwin","zeke"),
+    choice("告诉受影响的人，让他们拥有选择是否知情的权利。","把知情选择还给被影响的人","historia","mikasa"),
+    choice("保存事实，但不让它立刻破坏刚恢复的秩序。","暂存事实以保护刚恢复的秩序","annie","reiner")
+  ]}
 ];
 
-const scale = [
-  { label: "非常不同意", note: "完全不像我" },
-  { label: "比较不同意", note: "多数时候不符合" },
-  { label: "不确定", note: "视情况而定" },
-  { label: "比较同意", note: "多数时候符合" },
-  { label: "非常同意", note: "非常像我" }
-];
+const dimensions = ["action","planning","collective","inquiry","flexibility","trust"];
+const dimensionNames = { action:"行动", planning:"规划", collective:"集体", inquiry:"求知", flexibility:"修正", trust:"信任" };
 
 const roles = [
-  { name:"艾伦·耶格尔", short:"艾伦", tags:["自由意志","行动果断","信念强烈"], profile:{courage:.98,loyalty:.72,empathy:.42,stability:.35,strategy:.48,curiosity:.72,independence:.92,conviction:.98,discipline:.55,leadership:.78}, summary:"你对自由与目标有强烈执着。面对阻碍时，你倾向于亲自打破僵局，而不是等待局势替你选择。", advice:["把锋芒变成方向","你的行动力足以带动他人；在冲锋前多留一次复盘，会让力量更稳定。","为情绪留出出口","强烈的信念是燃料，也可能压缩视野。让可信赖的人挑战你的判断。"] },
-  { name:"米卡莎·阿克曼", short:"米卡莎", tags:["忠诚守护","冷静果断","韧性出众"], profile:{courage:.93,loyalty:.98,empathy:.7,stability:.82,strategy:.62,curiosity:.38,independence:.55,conviction:.84,discipline:.94,leadership:.58}, summary:"你习惯用行动保护重要的人。危机越迫近，你越能收起杂念，以稳定而直接的方式解决问题。", advice:["守护也要有边界","忠诚是你的核心优势，但别把所有人的安全都变成一个人的责任。","说出你的需要","你很擅长承担，却容易省略自己的感受。表达需求不会削弱你的可靠。"] },
-  { name:"阿尔敏·阿鲁雷特", short:"阿尔敏", tags:["战略思考","温和坚定","好奇求真"], profile:{courage:.62,loyalty:.84,empathy:.95,stability:.58,strategy:.98,curiosity:.94,independence:.56,conviction:.76,discipline:.76,leadership:.66}, summary:"你擅长在混乱中寻找另一条路。你看见细节与可能性，也愿意为了更少的伤害承担艰难决定。", advice:["相信你的判断","完整分析并不等于犹豫。为决策设置时限，会让你的智慧更快产生影响。","保留理想主义","你能同时看见现实与更好的可能；别因为环境粗粝而放弃这种能力。"] },
-  { name:"利威尔·阿克曼", short:"利威尔", tags:["高度自律","冷静高效","责任感强"], profile:{courage:.94,loyalty:.84,empathy:.58,stability:.98,strategy:.84,curiosity:.42,independence:.88,conviction:.9,discipline:1,leadership:.82}, summary:"你重视效率、纪律与可执行的结果。越是艰难的局面，你越会把情绪收紧，把注意力放在必须完成的事上。", advice:["允许不完美存在","高标准让你可靠，也会带来持续消耗。区分关键细节与可接受误差。","让关心被看见","你可能更习惯用行动表达在意；偶尔把它说出来，会减少彼此的误判。"] },
-  { name:"艾尔文·史密斯", short:"艾尔文", tags:["战略领导","长期主义","敢担代价"], profile:{courage:.9,loyalty:.78,empathy:.55,stability:.9,strategy:1,curiosity:.86,independence:.86,conviction:.96,discipline:.92,leadership:1}, summary:"你能够为了远方目标承受当下代价。你善于凝聚团队、分配资源，并在信息不完整时做出承担后果的决定。", advice:["别让目标吞没自己","长期主义需要代价，但你的个人需要也应该进入决策模型。","公开决策依据","你能承受复杂权衡；让团队理解原因，会把服从变成真正的共识。"] },
-  { name:"韩吉·佐耶", short:"韩吉", tags:["探索欲强","热情开放","理性共情"], profile:{courage:.76,loyalty:.76,empathy:.84,stability:.7,strategy:.82,curiosity:1,independence:.86,conviction:.72,discipline:.66,leadership:.72}, summary:"未知不会让你停下，反而会点燃你的注意力。你擅长把热情变成观察，并用新的理解改写旧结论。", advice:["给好奇心设锚点","探索能打开局面；明确阶段目标，可以避免兴趣把精力拉得过散。","让热情感染团队","你天然能降低未知带来的恐惧，把发现讲给别人听会放大你的价值。"] },
-  { name:"莱纳·布朗", short:"莱纳", tags:["责任沉重","坚韧可靠","内在冲突"], profile:{courage:.86,loyalty:.9,empathy:.64,stability:.38,strategy:.62,curiosity:.35,independence:.38,conviction:.62,discipline:.82,leadership:.74}, summary:"你很容易成为他人眼中可靠的人，也常把责任放在自己肩上。即使内在矛盾，你仍会努力完成承诺。", advice:["区分责任与负罪感","承担不等于惩罚自己。把事实责任和情绪负担分开，才能恢复力量。","允许角色之外的自己","你不必永远符合别人期待的形象。稳定来自一致，而不是压抑。"] },
-  { name:"吉克·耶格尔", short:"吉克", tags:["冷静布局","独立判断","悲观理性"], profile:{courage:.66,loyalty:.34,empathy:.3,stability:.82,strategy:.96,curiosity:.76,independence:.94,conviction:.9,discipline:.8,leadership:.8}, summary:"你倾向于退后一步观察系统，再寻找能改变全局的杠杆。你独立、克制，不轻易被群体情绪左右。", advice:["别让逻辑隔离经验","宏观方案需要真实个体校验。主动收集与你判断相反的感受和事实。","给希望留一席之地","悲观能降低风险，但也会过滤可能性。保留一个可逆的小实验。"] },
-  { name:"希斯特莉亚·雷斯", short:"希斯特莉亚", tags:["温柔坚定","承担责任","同理心强"], profile:{courage:.72,loyalty:.88,empathy:.98,stability:.68,strategy:.62,curiosity:.55,independence:.7,conviction:.82,discipline:.72,leadership:.7}, summary:"你的温和并不等于软弱。你会认真看见他人的处境，也能在关键时刻拒绝被安排的人生。", advice:["善意不必讨好","真正的同理心也包含对自己的尊重。答应之前，先确认那是不是你的意愿。","把价值观变成边界","你知道什么值得保护；清晰边界会让你的善意更有持续性。"] },
-  { name:"安妮·莱昂哈特", short:"安妮", tags:["独立克制","现实清醒","精准行动"], profile:{courage:.78,loyalty:.46,empathy:.45,stability:.86,strategy:.74,curiosity:.4,independence:1,conviction:.68,discipline:.94,leadership:.34}, summary:"你不热衷于表态，更愿意观察、判断，然后精准行动。你珍惜独处与自主，也很少向外界暴露脆弱。", advice:["独立不等于隔绝","选择值得信任的少数关系，让支持成为选项，而不是风险。","把冷静用在沟通上","你看得清局势；提前说出底线，比沉默到最后再抽离更有效。"] }
+  { id:"eren", name:"艾伦·耶格尔", short:"艾伦", asset:"assets/chibi/eren.png", alt:"Q版艾伦·耶格尔全身人物插画", accent:"#a24a38", profile:{action:.96,planning:.34,collective:.56,inquiry:.72,flexibility:.28,trust:.46}, verdict:"先撞向边界，再面对代价", summary:"别人还在衡量出口时，你更容易先确认自己不能接受什么，然后用行动逼局势改变。你和艾伦相似的地方，不只是敢冲，而是很难把选择权交给别人。", costLead:"这种力量能打破停滞，也可能让目标变得比沿途的人更响亮。", similarityTitle:"你不愿让局势替你决定", similarity:"当规则、命令或多数意见指向你无法接受的结果，你倾向于先阻止它发生，再在行动中修正路线。", costTitle:"自由要求会不断制造代价", cost:"艾伦的冲突在于：越想夺回选择，越可能把别人的选择压缩。你的行动力值得保留，但它并不会自动证明方向正确。", archetype:"把自由当作行动起点的人", intro:"他把不自由视为必须打破的现实，意志与行动彼此推动；故事也不断追问，这种推动一旦不再接受修正，会把人带到哪里。", comment:"档案重点不是“勇敢”，而是对被安排命运的强烈拒绝，以及拒绝之后必须承担的后果。", continuation:"如果故事继续，你会是最早打破僵局的人。真正困难的不是继续向前，而是在力量已经足够时，仍给别人留下选择。", share:"我更接近艾伦：先撞向边界，再面对代价。", timeline:["从墙内少年出发，把自由与墙外世界视为不可放弃的方向。","获得改变局势的力量后，个人意志开始影响越来越多人的命运。","追求自由与行动代价之间的矛盾，最终成为无法回避的核心。"] },
+  { id:"mikasa", name:"米卡莎·阿克曼", short:"米卡莎", asset:"assets/chibi/mikasa.png", alt:"Q版米卡莎·阿克曼全身人物插画", accent:"#9f3d3d", profile:{action:.90,planning:.62,collective:.94,inquiry:.34,flexibility:.46,trust:.76}, verdict:"先护住重要的人，再作选择", summary:"风险靠近时，你不会先解释立场，而会迅速站到重要的人身边。你和米卡莎相似的地方，是把牵挂变成行动；不同的是，守护越强，越需要确认那也是你自己的选择。", costLead:"保护能让人安心，也可能让你把自己的方向藏在关系后面。", similarityTitle:"你的承诺会直接变成行动", similarity:"当个人安危与抽象目标冲突，你更容易先确认重要的人没有被独自留下，再考虑之后的安排。", costTitle:"守护不能替代自主", cost:"米卡莎真正的张力不在忠诚本身，而在于能否从牵挂中分辨自己的意志。一直替别人承担，也可能让彼此都失去选择空间。", archetype:"在危险中把牵挂化为行动的人", intro:"她在混乱中异常稳定，习惯用能力和行动守住重要关系；成长则发生在她必须独立判断何为真正的保护时。", comment:"她的力量既来自深厚连接，也来自最终能够不让连接替自己作完所有决定。", continuation:"如果故事继续，你会是让同伴敢于回头确认的人。别忘了问自己：这次留下，是出于爱、责任，还是害怕失去后的空白。", share:"我更接近米卡莎：先护住重要的人，再作选择。", timeline:["童年失去与新的家人，让“守护”成为最深的行动本能。","以顶尖能力进入兵团，在多次危机中成为同伴最可靠的防线。","最终必须把爱与服从分开，完成属于自己的决定。"] },
+  { id:"armin", name:"阿尔敏·阿鲁雷特", short:"阿尔敏", asset:"assets/chibi/armin.png", alt:"Q版阿尔敏·阿鲁雷特全身人物插画", accent:"#c89f52", profile:{action:.48,planning:.97,collective:.78,inquiry:.94,flexibility:.88,trust:.84}, verdict:"他会先问：还有第三条路吗", summary:"周围的人急着在两条路中选一条时，你往往还会追问：有没有被漏掉的可能？你愿意先听完同伴的顾虑，再决定下一步，也知道无法两全时仍必须行动。", costLead:"寻找更好的答案能减少伤害，也可能让你错过必须出手的时刻。", similarityTitle:"你会为选择多找一个出口", similarity:"你不把犹豫当作软弱，而会用它检查信息、寻找遗漏条件，并尽量让决定不只剩下输赢两端。", costTitle:"理解得更多，不等于能永远推迟", cost:"阿尔敏的难处是：看见每一方的代价后，仍要亲手落下决定。继续求证有价值，但时限不会总等到答案完整。", archetype:"在两条路之外寻找可能的人", intro:"他以观察、想象和沟通改变战局，珍视生命也理解牺牲有时无法回避；真正的成长是从提出方案走向承担方案。", comment:"他并非因为“总能算对”而重要，而是知道决定会伤到人，仍认真寻找伤害更小的路径。", continuation:"如果故事继续，你会是让队伍多看见一种可能的人。下一步不是放弃谨慎，而是为谨慎设定一个必须行动的时刻。", share:"我更接近阿尔敏：他会先问，还有第三条路吗？", timeline:["对墙外世界的好奇，让他与伙伴共同走向未知。","多次用推理、沟通与策略为几乎封死的局面打开出口。","在无法避免的牺牲面前，从提出可能走向承担领导责任。"] },
+  { id:"levi", name:"利威尔·阿克曼", short:"利威尔", asset:"assets/chibi/levi.png", alt:"Q版利威尔·阿克曼全身人物插画", accent:"#66796b", profile:{action:.91,planning:.86,collective:.82,inquiry:.44,flexibility:.58,trust:.60}, verdict:"没有完美答案，也要作出选择", summary:"信息不足、损失已经发生时，你更关心下一步还能做对什么。你和利威尔相似的地方，是不拿漂亮口号掩盖风险，并愿意对无法保证的选择负责。", costLead:"冷静能保护队伍，但长期只处理结果，也会让情绪没有被安放的位置。", similarityTitle:"你会在混乱里恢复可执行的秩序", similarity:"面对失败或时间压力，你倾向于先收拢队形、确认事实并采取可靠动作，而不是用激烈表态替代决定。", costTitle:"克制并不等于没有重量", cost:"利威尔承担的是明知无法证明哪条路正确，仍必须选择的压力。效率能让人活下来，却不能自动处理失去留下的情感。", archetype:"在不确定里承担决定的人", intro:"他重视可执行的判断，也从不把选择包装成确定答案；一次次失去之后，仍要决定怎样让牺牲不被浪费。", comment:"“强”只是表面，档案真正记录的是：无法挽回时仍保持判断，并把责任留在自己手中。", continuation:"如果故事继续，你会是危机里最可靠的执行者。也许要给自己留一处不必立即处理、不必马上坚强的空间。", share:"我更接近利威尔：没有完美答案，也要作出选择。", timeline:["从地下街的生存经验进入调查兵团，逐渐成为核心战力。","在多次任务中面对信息不足、命令变化与无法挽回的损失。","背负同伴托付继续前行，让承诺体现在最终行动里。"] },
+  { id:"erwin", name:"艾尔文·史密斯", short:"艾尔文", asset:"assets/chibi/erwin.png", alt:"Q版艾尔文·史密斯全身人物插画", accent:"#8a7041", profile:{action:.82,planning:.99,collective:.90,inquiry:.80,flexibility:.50,trust:.70}, verdict:"把远方目标变成共同方向", summary:"局势分裂时，你会先决定什么必须保住，再让资源和人围绕它重新排列。你和艾尔文相似的地方，是能承担集体判断；危险则在于，个人愿望可能披上“大局”的外衣。", costLead:"领导让方向变清楚，也会让别人的代价集中到你的决定上。", similarityTitle:"你习惯先确定不可放弃的目标", similarity:"当计划失败或团队分裂，你倾向于收束目标、保留后手，并让决定能够被整个队伍执行。", costTitle:"大局与私愿有时很难分开", cost:"艾尔文的独特冲突是追寻真相既是公共目标，也是私人执念。承担代价之前，领导者必须诚实辨认两者。", archetype:"用目标聚拢不确定的人", intro:"他以战略和表达让集体行动成为可能，也长期面对一个问题：自己要求他人支付的代价，究竟服务于人类，还是自己的真相。", comment:"真正的领导力不只在决断，更在于不躲到“大局”背后，承认决定里也有自己的欲望。", continuation:"如果故事继续，你会是让混乱重新拥有方向的人。越能说服别人，越需要保留一个能质疑你动机的位置。", share:"我更接近艾尔文：把远方目标变成共同方向。", timeline:["因追寻世界真相加入调查兵团，并逐步成为团长。","用新的作战体系与长期布局，把不可能的探索变成集体行动。","在个人执念与集体使命抵达同一终点时，作出最终选择。"] },
+  { id:"hange", name:"韩吉·佐耶", short:"韩吉", asset:"assets/chibi/hange.png", alt:"Q版韩吉·佐耶全身人物插画", accent:"#9c6b48", profile:{action:.68,planning:.78,collective:.70,inquiry:1,flexibility:.94,trust:.82}, verdict:"把恐惧对象变成研究对象", summary:"面对陌生或敌意，你更愿意先理解它如何运作，而不是急着把它归入敌我。你和韩吉相似的地方，是能让新证据改变旧看法，也会因问题太迷人而忘记责任的重量。", costLead:"好奇能打开边界，但领导位置要求你在想知道与必须保护之间取舍。", similarityTitle:"未知会让你靠近，而不是退开", similarity:"发现记录矛盾、陌生区域或难以理解的对象时，你倾向于保留证据、继续观察，并允许结论被新事实修改。", costTitle:"热情也会占用判断空间", cost:"韩吉的张力不只是研究欲，而是成为负责人后，不能永远追随最有趣的问题。好奇需要与时间、资源和他人安全谈判。", archetype:"用理解削弱恐惧的人", intro:"他把敌意对象转化为可观察、可提问的存在；当研究者成为领导者，探索的热情必须与现实责任共享方向。", comment:"好奇不是轻松的天赋，它会不断迫使人承认：自己昨天确信的结论，今天可能需要重写。", continuation:"如果故事继续，你会是最先把未知变成问题的人。别熄灭热情，只要记得有些问题必须由整个队伍决定是否继续追。", share:"我更接近韩吉：把恐惧对象变成研究对象。", timeline:["从单纯对抗转向观察与研究，建立对巨人的关键知识。","不断用实验和新证据挑战被视为理所当然的结论。","承担领导职责后，在探索、生命与现实压力之间作出取舍。"] },
+  { id:"reiner", name:"莱纳·布朗", short:"莱纳", asset:"assets/chibi/reiner.png", alt:"Q版莱纳·布朗全身人物插画", accent:"#8b715b", profile:{action:.78,planning:.58,collective:.90,inquiry:.36,flexibility:.32,trust:.66}, verdict:"在彼此冲突的责任之间硬撑", summary:"你容易成为别人眼里“能扛住”的人，也会在身份、承诺和真实感受冲突时继续完成眼前任务。你和莱纳相似的地方，是责任不会因矛盾消失；代价是你可能把撕裂误认成坚强。", costLead:"可靠可以保护别人，也可能让你长期扮演一个无法呼吸的角色。", similarityTitle:"你不会因为内心冲突就停止承担", similarity:"当个人牵挂、集体命令和过去承诺互相拉扯，你仍会试图让至少一部分人安全抵达下一步。", costTitle:"两个身份不能靠硬撑永远共存", cost:"莱纳的核心不是“坚韧可靠”，而是长期扮演互相冲突的角色。若不承认矛盾，责任感最终会变成对自己的惩罚。", archetype:"背着冲突身份继续前行的人", intro:"他既是执行任务的人，也是与同伴共同生活的人；两套责任同时为真，让“英雄”与“加害者”的边界不断破裂。", comment:"档案里的强壮外形不是答案。真正需要被看见的是：一个人如何面对自己确实伤害过、也确实在意的人。", continuation:"如果故事继续，你会是即使矛盾也不轻易离席的人。下一步不是再扛一点，而是停止用角色要求替代真实的责任边界。", share:"我更接近莱纳：在彼此冲突的责任之间硬撑。", timeline:["带着战士任务进入墙内，并试图成为被认可的可靠同伴。","长期生活让任务身份与真实关系发生撕裂。","面对过去的伤害后，责任从完成命令逐渐转向承担后果。"] },
+  { id:"zeke", name:"吉克·耶格尔", short:"吉克", asset:"assets/chibi/zeke.png", alt:"Q版吉克·耶格尔全身人物插画", accent:"#8d7a50", profile:{action:.46,planning:.96,collective:.28,inquiry:.82,flexibility:.36,trust:.30}, verdict:"从系统上推演，却容易漏掉人", summary:"你擅长退后一步看结构，愿意为长期方案延迟眼前满足。你和吉克相似的地方，是不轻易被现场情绪带走；危险则是模型越完整，具体生命越可能只剩变量。", costLead:"宏观视角能发现系统问题，也可能替别人决定何为“更好的结局”。", similarityTitle:"你会先寻找改变全局的杠杆", similarity:"面对资源、谈判或长期风险，你更愿意计算整体后果、保留多步计划，而不是只回应眼前最响亮的需求。", costTitle:"正确模型也无法代替他人同意", cost:"吉克的落差在于宏观推演与具体生命之间。他试图减少痛苦，却把别人的选择排除在方案之外。", archetype:"从结构层面寻找终局方案的人", intro:"他以长期布局和宏观逻辑处理族群困境，却也展示了一个危险：当人被缩成数字，减少痛苦的方案仍可能夺走选择。", comment:"冷静并不自动等于客观。模型能解释世界的一部分，但没有任何模型有权替所有人同意。", continuation:"如果故事继续，你会是看见系统裂缝的人。让方案多经历一次具体人物的质疑，可能比让推演再精密一层更重要。", share:"我更接近吉克：从系统上推演，却容易漏掉人。", timeline:["在家庭期待与外部压力中形成对世界的悲观判断。","凭借情报、耐心和多层部署成为关键战略角色。","最终在与具体生命的重新连接中，触碰到模型之外的意义。"] },
+  { id:"historia", name:"希斯特莉亚·雷斯", short:"希斯特莉亚", asset:"assets/chibi/historia.png", alt:"Q版希斯特莉亚·雷斯全身人物插画", accent:"#c2a353", profile:{action:.58,planning:.62,collective:.91,inquiry:.56,flexibility:.90,trust:.94}, verdict:"不再迎合期待，重新选择善良", summary:"你会认真看见具体的人，也愿意为了公平质疑既定安排。你和希斯特莉亚相似的地方，不是“温柔”，而是逐渐拒绝用讨好换取位置，让帮助别人变成自己决定的事。", costLead:"善意一旦只剩迎合，就会让你的真实意愿从关系里消失。", similarityTitle:"你希望善意仍然保留选择", similarity:"当规则伤到眼前的人，你更愿意公开冲突、邀请他人共同调整，而不是让一个人默默承担所谓的大局。", costTitle:"被需要不等于被看见", cost:"希斯特莉亚经历过把自我牺牲包装成善良的阶段。真正的自主，是允许自己拒绝别人期待的“好人”角色。", archetype:"从迎合走向自主承担的人", intro:"她曾通过符合他人期待来寻找存在价值，后来学会拒绝被安排，并把对弱者的关心转化为主动选择。", comment:"她的善良之所以有力量，不是因为永远答应，而是因为终于能够说“不”，再决定自己真正愿意承担什么。", continuation:"如果故事继续，你会是让决定重新看见具体人的一方。请保留善意，也保留拒绝；两者同时存在，选择才真正属于你。", share:"我更接近希斯特莉亚：不再迎合期待，重新选择善良。", timeline:["以克里斯塔身份生活，长期用符合期待的形象换取认可。","在重要关系与关键选择中，开始承认并保护真实意愿。","承担女王职责后，把个人觉醒转化为对弱者的长期保护。"] },
+  { id:"annie", name:"安妮·莱昂哈特", short:"安妮", asset:"assets/chibi/annie.png", alt:"Q版安妮·莱昂哈特全身人物插画", accent:"#67717a", profile:{action:.72,planning:.84,collective:.40,inquiry:.38,flexibility:.64,trust:.30}, verdict:"只承诺能控制的那一部分", summary:"你不容易把自己交给群体情绪，更愿意验证事实、守住边界，只承诺真正能做到的事。你和安妮相似的地方，是现实而克制；代价是有限信任也会让连接难以发生。", costLead:"自保让你减少被利用的风险，也可能让别人永远不知道你其实在意。", similarityTitle:"你会先划清可控与不可控", similarity:"面对陌生合作、混乱命令或无法两全的关系，你倾向于限制承诺范围，用可验证的行动而不是表态建立判断。", costTitle:"保持距离也会失去被理解的机会", cost:"安妮的现实并非没有情感，而是不相信情感足以保护任何人。过度自保会让有限的信任始终无法长大。", archetype:"以克制和边界保护自己的人", intro:"她依靠训练、判断和距离感生存，对宏大口号保持警惕；冷淡表象下仍有牵挂，只是不轻易允许它主导行动。", comment:"她的独立不是轻松自由，而是把风险和情感都控制在有限范围内，以免再次被他人的目标吞没。", continuation:"如果故事继续，你会是最少轻率许诺的人。试着让少数可信关系知道你的边界为何存在，距离才不会成为永久封闭。", share:"我更接近安妮：只承诺能控制的那一部分。", timeline:["在严格训练与任务要求中形成克制、独立的生存方式。","长期潜伏并执行危险任务，以有限信任维持边界。","重新面对世界后，开始承认牵挂，并选择参与共同的未来。"] }
 ];
 
-const roleDetails = {
-  "艾伦·耶格尔": { archetype:"自由驱动的破局者", intro:"一个把自由视为本能、会主动撞向边界的人。他的力量来自不接受既定答案，也因此需要不断辨认：眼前的代价是否仍服务于最初的信念。", creed:"如果世界不给答案，就亲自走到边界之外。", timeline:["从墙内少年到训练兵，以强烈目标推动自己不断行动。","在一次次失去与真相冲击中，承担起改变局势的力量。","对自由的追求逐渐走向极端，也让选择的代价成为核心命题。"] },
-  "米卡莎·阿克曼": { archetype:"沉默而坚定的守护者", intro:"在危机中异常稳定，把保护重要的人化为清晰行动。她的可靠来自训练、克制和忠诚，而成长课题是让自我选择不再只围绕某一个人。", creed:"真正的守护，也包括在关键时刻作出自己的选择。", timeline:["经历童年巨变后，将家人与归属视为最重要的锚点。","以顶尖能力加入训练兵团，多次在绝境中保护同伴。","最终必须在爱、责任与更大范围的生命之间作出独立决定。"] },
-  "阿尔敏·阿鲁雷特": { archetype:"看见第三条路的战略家", intro:"身体并非最强，却能用观察、推演与同理心改变战局。他相信理解世界是行动的前提，也愿意在无法两全时承担艰难的代价。", creed:"改变局面的关键，常藏在所有人忽略的可能性里。", timeline:["因对墙外世界的好奇，与伙伴共同踏上探索之路。","多次用推理识别敌人、说服盟友并制定逆转战局的方案。","从质疑自己走向承担领导责任，在理想与现实间寻找和平路径。"] },
-  "利威尔·阿克曼": { archetype:"极端环境中的执行者", intro:"冷静、精准、对责任有近乎苛刻的要求。他很少许诺确定答案，更重视在信息有限时作出选择，并让牺牲不被轻易浪费。", creed:"无法预知结果时，仍要为自己的选择负责。", timeline:["从地下街生存者成为调查兵团核心战力。","率领特别作战班，在高风险任务中反复面对失去。","长期背负战友的托付，将完成使命坚持到最后。"] },
-  "艾尔文·史密斯": { archetype:"以远方为坐标的统帅", intro:"擅长在不完整信息中布局，用清晰目标凝聚团队。他能承受多数人无法承担的决策压力，但个人愿望与集体利益之间始终存在尖锐张力。", creed:"领导不是掌握答案，而是在代价出现时仍然承担决定。", timeline:["因追寻世界真相加入调查兵团，并逐步成为团长。","通过长距离索敌、诱捕等战略重塑兵团作战方式。","在决定性战役中放下个人执念，率队完成最后的冲锋。"] },
-  "韩吉·佐耶": { archetype:"用好奇照亮未知的研究者", intro:"会把恐惧对象变成研究对象，用热情、实验和同理心拆解偏见。她的开放性让团队看见新路，也必须学习在探索欲与领导责任之间分配精力。", creed:"理解未知，往往是停止恐惧它的第一步。", timeline:["从憎恨巨人转向观察与研究，建立大量关键知识。","在实验与作战中不断用新证据挑战旧认知。","承担团长职责后，努力在真相、生命与现实压力间维持选择空间。"] },
-  "莱纳·布朗": { archetype:"在责任裂缝中前行的人", intro:"习惯成为可靠的支柱，却长期被相互冲突的身份与使命拉扯。他的坚韧不是从不崩溃，而是在破碎之后仍试图保护身边的人。", creed:"真正的坚强，不是没有矛盾，而是不再逃避它。", timeline:["作为战士候补接受任务，带着证明自己的愿望踏上岛屿。","在士兵与战士两种身份之间产生深刻分裂。","面对过去造成的伤害，开始从服从使命转向承担真实后果。"] },
-  "吉克·耶格尔": { archetype:"从系统层面落子的规划者", intro:"习惯抽离现场情绪，以宏观逻辑寻找改变结构的方案。他的长处是冷静布局，风险则是把真实的人压缩成理论中的数字。", creed:"看见系统的缺陷很重要，但别让方案忘记具体的人。", timeline:["在家庭期待与外部压力中形成对世界的悲观判断。","凭借情报与长期部署成为关键战略角色。","最终在与他人的连接中，重新触碰日常生命本身的意义。"] },
-  "希斯特莉亚·雷斯": { archetype:"以温柔建立边界的承担者", intro:"能敏锐感知他人的痛苦，也经历过用讨好换取存在感的阶段。她真正的力量来自拒绝被安排，并让善意成为主动选择。", creed:"善良不是扮演别人期待的样子，而是诚实地决定要守护什么。", timeline:["以克里斯塔身份生活，长期压抑真实需求以获得认可。","在重要关系中学会面对自己，并拒绝被他人当作工具。","承担女王责任，把个人觉醒转化为对弱者的长期保护。"] },
-  "安妮·莱昂哈特": { archetype:"把情绪藏进精准行动的人", intro:"独立、现实、不轻易暴露内心，习惯依靠训练与判断完成任务。冷淡表象之下仍保留共情，只是不愿让情感轻易左右生存。", creed:"保持距离能保护自己，但理解内心才能真正作出选择。", timeline:["在严格训练中掌握出色格斗能力，并以战士身份进入墙内。","长期潜伏并执行高风险任务，以克制维持秘密。","在重新面对世界后，开始承认牵挂并选择参与共同的未来。"] }
-};
+const roleMap = Object.fromEntries(roles.map(role => [role.id, role]));
 
-const dims = ["courage","strategy","loyalty","empathy","stability","independence"];
-const dimNames = { courage:"勇气", strategy:"谋略", loyalty:"忠诚", empathy:"共情", stability:"稳定", independence:"独立" };
-const dimNotes = {
-  courage:"面对风险时主动推进的倾向",
-  strategy:"在行动前规划、权衡与推演的倾向",
-  loyalty:"对承诺、伙伴与共同目标的投入",
-  empathy:"理解他人感受并寻找合作空间的倾向",
-  stability:"在压力中维持情绪与判断的能力",
-  independence:"不依赖群体意见、坚持自主判断的倾向"
-};
-const state = { index: 0, answers: Array(questions.length).fill(null) };
-const $ = (id) => document.getElementById(id);
-const screens = ["introScreen","quizScreen","resultScreen"];
-
-function showScreen(id) {
-  screens.forEach(name => $(name).classList.toggle("is-active", name === id));
-  window.scrollTo({ top: 0, behavior: "smooth" });
+function optionVector(option) {
+  const total = option.roles.reduce((sum, [, weight]) => sum + weight, 0);
+  return Object.fromEntries(dimensions.map(dim => [dim, option.roles.reduce((sum, [id, weight]) => sum + roleMap[id].profile[dim] * weight, 0) / total]));
 }
 
-function saveState() {
-  localStorage.setItem("wall-personality-progress", JSON.stringify(state));
-  $("resumeButton").hidden = !state.answers.some(v => v !== null);
-}
-
-function renderQuestion() {
-  const q = questions[state.index];
-  $("currentNumber").textContent = String(state.index + 1).padStart(2, "0");
-  $("progressBar").style.width = `${((state.index + 1) / questions.length) * 100}%`;
-  $("dimensionLabel").textContent = q.dimension;
-  $("questionCode").textContent = `Q-${String(state.index + 1).padStart(2, "0")}`;
-  $("questionText").textContent = q.text;
-  $("answerList").innerHTML = scale.map((item, i) => `
-    <div class="answer-option">
-      <input type="radio" name="answer" id="answer-${i}" value="${i}" ${state.answers[state.index] === i ? "checked" : ""}>
-      <label for="answer-${i}"><span class="option-key">${i + 1}</span><strong>${item.label}</strong><span class="option-note">${item.note}</span></label>
-    </div>`).join("");
-  $("answerList").querySelectorAll("input").forEach(input => input.addEventListener("change", event => {
-    state.answers[state.index] = Number(event.target.value);
-    $("nextButton").disabled = false;
-    $("nextButton").textContent = state.index === questions.length - 1 ? "生成档案 →" : "下一题 →";
-    saveState();
-  }));
-  $("prevButton").disabled = state.index === 0;
-  $("nextButton").disabled = state.answers[state.index] === null;
-  $("nextButton").textContent = state.index === questions.length - 1 ? "生成档案 →" : "下一题 →";
-}
-
-function startQuiz(resume = false) {
-  if (!resume) { state.index = 0; state.answers = Array(questions.length).fill(null); }
-  showScreen("quizScreen"); renderQuestion(); saveState();
-}
-
-function userVector() {
-  const totals = {}, counts = {};
-  questions.forEach((q, i) => {
-    let v = state.answers[i] / 4;
-    if (q.reverse) v = 1 - v;
-    totals[q.key] = (totals[q.key] || 0) + v;
-    counts[q.key] = (counts[q.key] || 0) + 1;
+function calculateResult(answers) {
+  const direct = Object.fromEntries(roles.map(role => [role.id, 0]));
+  const maximum = Object.fromEntries(roles.map(role => [role.id, 0]));
+  const vector = Object.fromEntries(dimensions.map(dim => [dim, 0]));
+  questions.forEach((question, index) => {
+    roles.forEach(role => {
+      maximum[role.id] += Math.max(
+        0,
+        ...question.options.map(option => option.roles.find(([id]) => id === role.id)?.[1] || 0)
+      );
+    });
+    const option = question.options[answers[index]];
+    option.roles.forEach(([id, weight]) => { direct[id] += weight; });
+    const values = optionVector(option);
+    dimensions.forEach(dim => { vector[dim] += values[dim]; });
   });
-  Object.keys(totals).forEach(k => totals[k] /= counts[k]);
-  return totals;
+  dimensions.forEach(dim => { vector[dim] /= questions.length; });
+  const ranked = roles.map((role, order) => {
+    const distance = Math.sqrt(dimensions.reduce((sum, dim) => sum + Math.pow(vector[dim] - role.profile[dim], 2), 0) / dimensions.length);
+    const shape = Math.max(0, 1 - distance);
+    const affinity = direct[role.id] / Math.max(1, maximum[role.id]);
+    return { ...role, direct: direct[role.id], shape, score: affinity * .7 + shape * .3, order };
+  }).sort((a, b) => b.score - a.score || b.direct - a.direct || b.shape - a.shape || a.order - b.order);
+  return { ranked, vector };
 }
 
-function similarity(a, b) {
-  const keys = Object.keys(b);
-  const distance = Math.sqrt(keys.reduce((sum, key) => sum + Math.pow((a[key] ?? .5) - b[key], 2), 0) / keys.length);
-  return Math.max(0, 1 - distance);
-}
+function browserApp() {
+  const $ = id => document.getElementById(id);
+  const screens = ["introScreen","quizScreen","resultScreen"];
+  const state = { index:0, answers:Array(questions.length).fill(null), result:null };
+  const storageKey = "wall-character-choices-v2";
 
-function drawRadar(vector) {
-  const svg = $("radarChart"), cx = 180, cy = 148, radius = 108;
-  const point = (idx, value) => { const angle = -Math.PI / 2 + idx * Math.PI * 2 / dims.length; return [cx + Math.cos(angle) * radius * value, cy + Math.sin(angle) * radius * value]; };
-  const polygon = value => dims.map((_, i) => point(i, value).join(",")).join(" ");
-  const grids = [1,.75,.5,.25].map(v => `<polygon class="radar-grid" points="${polygon(v)}"/>`).join("");
-  const axes = dims.map((_, i) => { const [x,y] = point(i,1); return `<line class="radar-axis" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`; }).join("");
-  const shapePoints = dims.map((d,i) => point(i, vector[d] ?? .5));
-  const shape = `<polygon class="radar-shape" points="${shapePoints.map(p=>p.join(",")).join(" ")}"/>${shapePoints.map(p=>`<circle class="radar-dot" cx="${p[0]}" cy="${p[1]}" r="4"/>`).join("")}`;
-  const labels = dims.map((d,i) => { const [x,y] = point(i,1.25); const anchor = x < cx - 8 ? "end" : x > cx + 8 ? "start" : "middle"; return `<text class="radar-label" x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle">${dimNames[d]} ${Math.round((vector[d] ?? .5)*100)}</text>`; }).join("");
-  svg.innerHTML = grids + axes + shape + labels;
-}
-
-function closestDimensions(role, vector, limit = 2) {
-  return dims.slice().sort((a, b) => Math.abs((vector[a] ?? .5) - role.profile[a]) - Math.abs((vector[b] ?? .5) - role.profile[b])).slice(0, limit);
-}
-
-function matchReason(role, vector) {
-  const close = closestDimensions(role, vector, 2).map(key => dimNames[key]);
-  return `你们在${close.join("与")}上的表现最接近，同时都带有“${role.tags[0]}”的行动底色。`;
-}
-
-function renderDimensions(vector) {
-  $("dimensionList").innerHTML = dims.map(key => {
-    const score = Math.round((vector[key] ?? .5) * 100);
-    return `<div class="dimension-row" title="${dimNotes[key]}"><strong>${dimNames[key]}</strong><div class="dimension-meter"><i style="width:${score}%"></i></div><span>${score}</span></div>`;
-  }).join("");
-  const sorted = dims.slice().sort((a,b) => (vector[b] ?? .5) - (vector[a] ?? .5));
-  const high = sorted[0], support = sorted[1], low = sorted[sorted.length - 1];
-  $("insightList").innerHTML = [
-    ["主导优势", dimNames[high], `你的${dimNames[high]}得分最突出。${dimNotes[high]}是你在复杂局势中的首选资源。`],
-    ["辅助优势", dimNames[support], `${dimNames[support]}为主导特质提供支撑，让你的选择不只依赖单一反应。`],
-    ["潜在张力", dimNames[low], `${dimNames[low]}相对较低，这不是缺点，而是提醒你在相关情境中需要更有意识地补充视角。`]
-  ].map(item => `<div class="insight-item"><span>${item[0]}</span><h4>${item[1]}</h4><p>${item[2]}</p></div>`).join("");
-  return { sorted, high, support, low };
-}
-
-function renderResults() {
-  const vector = userVector();
-  const ranked = roles.map(role => ({...role, score: similarity(vector, role.profile)})).sort((a,b) => b.score - a.score);
-  const top = ranked[0];
-  const detail = roleDetails[top.name];
-  const displayScore = score => Math.round(60 + score * 38);
-  $("resultTitle").textContent = top.name;
-  $("topScore").textContent = displayScore(top.score);
-  $("tagList").innerHTML = top.tags.map(tag => `<span>${tag}</span>`).join("");
-  $("resultSummary").textContent = top.summary;
-  $("resultVerdict").innerHTML = `<span>行为原型：${detail.archetype}</span><span>次高匹配：${ranked[1].short}</span><span>结果区分度：${displayScore(top.score) - displayScore(ranked[1].score) <= 2 ? "多元型" : "清晰型"}</span>`;
-  $("resultScreen").querySelector(".result-hero").dataset.initial = top.short.slice(0,1);
-  const dimensional = renderDimensions(vector);
-  $("rankingList").innerHTML = ranked.slice(0,3).map((role, i) => `<li class="rank-card"><div class="rank-card-head"><span class="rank-number">0${i+1}</span><span class="rank-score">${displayScore(role.score)}<small>%</small></span></div><h3>${role.name}</h3><p class="rank-archetype">${roleDetails[role.name].archetype}</p><p class="rank-reason">${matchReason(role, vector)}</p><div class="rank-bar"><i style="width:${displayScore(role.score)}%"></i></div></li>`).join("");
-  $("roleCode").textContent = `A-${String(roles.findIndex(role => role.name === top.name) + 1).padStart(2,"0")}`;
-  $("roleArchetype").textContent = detail.archetype;
-  $("roleIntro").textContent = detail.intro;
-  $("roleCreed").textContent = `“${detail.creed}”`;
-  $("roleTimeline").innerHTML = detail.timeline.map(event => `<li>${event}</li>`).join("");
-  $("compareList").innerHTML = dims.map(key => {
-    const userScore = Math.round((vector[key] ?? .5) * 100), roleScore = Math.round(top.profile[key] * 100);
-    return `<div class="compare-row"><strong>${dimNames[key]}</strong><div class="compare-track" aria-label="你 ${userScore}，角色 ${roleScore}"><i style="width:${userScore}%"></i><b style="width:${roleScore}%"></b></div><span class="compare-values">你 ${userScore}<br>角色 ${roleScore}</span></div>`;
-  }).join("");
-  $("adviceContent").innerHTML = `<div class="advice-item"><span>CORE / 核心模式</span><h3>${top.tags[0]} × ${top.tags[1]}</h3><p>${top.summary}</p></div>${top.advice.map((item, i) => i % 2 === 0 ? `<div class="advice-item"><span>ACTION / 行动建议</span><h3>${item}</h3><p>${top.advice[i+1]}</p></div>` : "").join("")}<div class="advice-item"><span>BALANCE / 平衡练习</span><h3>补充${dimNames[dimensional.low]}</h3><p>下一次遇到重要选择时，刻意多问一句：“如果我把${dimNames[dimensional.low]}也纳入考虑，会出现什么新选项？”</p></div>`;
-  drawRadar(vector);
-  window.latestResult = `我的墙内人格档案：最像${top.name}（${displayScore(top.score)}%），行为原型是“${detail.archetype}”。关键词：${top.tags.join("、")}。前三匹配：${ranked.slice(0,3).map(role => `${role.short} ${displayScore(role.score)}%`).join("、")}。核心优势：${dimNames[dimensional.high]}与${dimNames[dimensional.support]}。`;
-  localStorage.setItem("wall-personality-result", JSON.stringify({ name: top.name, score: displayScore(top.score), tags: top.tags }));
-  localStorage.removeItem("wall-personality-progress");
-  $("resumeButton").hidden = true;
-  showScreen("resultScreen");
-}
-
-$("startButton").addEventListener("click", () => startQuiz(false));
-$("resumeButton").addEventListener("click", () => startQuiz(true));
-$("prevButton").addEventListener("click", () => { if (state.index > 0) { state.index--; renderQuestion(); saveState(); } });
-$("nextButton").addEventListener("click", () => { if (state.answers[state.index] === null) return; if (state.index < questions.length - 1) { state.index++; renderQuestion(); saveState(); } else renderResults(); });
-$("exitButton").addEventListener("click", () => { saveState(); showScreen("introScreen"); });
-$("restartButton").addEventListener("click", () => startQuiz(false));
-$("printButton").addEventListener("click", () => window.print());
-$("copyButton").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText(window.latestResult); $("toast").textContent = "结果已复制"; }
-  catch { $("toast").textContent = "复制失败，请手动截图保存"; }
-  $("toast").classList.add("is-visible"); setTimeout(() => $("toast").classList.remove("is-visible"), 1800);
-});
-document.querySelector(".brand").addEventListener("click", event => { event.preventDefault(); showScreen("introScreen"); });
-document.addEventListener("keydown", event => {
-  if (!$("quizScreen").classList.contains("is-active")) return;
-  const n = Number(event.key);
-  if (n >= 1 && n <= 5) { const input = $(`answer-${n-1}`); input.checked = true; input.dispatchEvent(new Event("change", {bubbles:true})); }
-  if (event.key === "Enter" && !$("nextButton").disabled) $("nextButton").click();
-});
-
-try {
-  const saved = JSON.parse(localStorage.getItem("wall-personality-progress"));
-  if (saved && Array.isArray(saved.answers) && saved.answers.length === questions.length) { state.index = saved.index || 0; state.answers = saved.answers; $("resumeButton").hidden = false; }
-} catch { localStorage.removeItem("wall-personality-progress"); }
-
-function registerWebTools() {
+  function showScreen(id) {
+    screens.forEach(name => $(name).classList.toggle("is-active", name === id));
+    window.scrollTo({ top:0, behavior:"smooth" });
+  }
+  function saveState() {
+    localStorage.setItem(storageKey, JSON.stringify({ index:state.index, answers:state.answers }));
+    $("resumeButton").hidden = !state.answers.some(value => value !== null);
+  }
+  function renderQuestion() {
+    const question = questions[state.index];
+    $("currentNumber").textContent = String(state.index + 1).padStart(2,"0");
+    $("currentNumber").nextElementSibling.textContent = `/ ${questions.length}`;
+    $("progressBar").style.width = `${((state.index + 1) / questions.length) * 100}%`;
+    $("dimensionLabel").textContent = question.dimension;
+    $("questionCode").textContent = `SCENE-${String(state.index + 1).padStart(2,"0")}`;
+    $("questionText").textContent = question.text;
+    $("answerList").innerHTML = question.options.map((option, index) => `<div class="answer-option"><input type="radio" name="answer" id="answer-${index}" value="${index}" ${state.answers[state.index] === index ? "checked" : ""}><label for="answer-${index}"><span class="option-key">${index + 1}</span><strong>${option.text}</strong><span class="selected-mark" aria-hidden="true">已选择</span></label></div>`).join("");
+    $("answerList").querySelectorAll("input").forEach(input => input.addEventListener("change", event => {
+      state.answers[state.index] = Number(event.target.value);
+      $("nextButton").disabled = false;
+      $("nextButton").textContent = state.index === questions.length - 1 ? "查看人物档案" : "下一题";
+      saveState();
+    }));
+    $("prevButton").disabled = state.index === 0;
+    $("nextButton").disabled = state.answers[state.index] === null;
+    $("nextButton").textContent = state.index === questions.length - 1 ? "查看人物档案" : "下一题";
+  }
+  function startQuiz(resume = false) {
+    if (!resume) { state.index = 0; state.answers = Array(questions.length).fill(null); }
+    showScreen("quizScreen"); renderQuestion(); saveState();
+  }
+  function evidenceFor(roleId) {
+    return questions.map((question, index) => ({ option:question.options[state.answers[index]], index })).filter(item => item.option.roles.some(([id]) => id === roleId)).sort((a,b) => (b.option.roles.find(([id]) => id === roleId)?.[1] || 0) - (a.option.roles.find(([id]) => id === roleId)?.[1] || 0)).slice(0,3).map(item => item.option.signal);
+  }
+  function renderDimensions(vector) {
+    $("dimensionList").innerHTML = dimensions.map(dim => `<div class="dimension-row"><strong>${dimensionNames[dim]}</strong><div class="dimension-meter"><i style="width:${Math.round(vector[dim] * 100)}%"></i></div><span>${vector[dim] >= .72 ? "鲜明" : vector[dim] >= .52 ? "适中" : "克制"}</span></div>`).join("");
+  }
+  function renderResults() {
+    const result = calculateResult(state.answers);
+    state.result = result;
+    const top = result.ranked[0];
+    const evidence = evidenceFor(top.id);
+    document.documentElement.style.setProperty("--role-accent", top.accent);
+    $("resultCharacter").src = top.asset;
+    $("resultCharacter").alt = top.alt;
+    $("resultTitle").textContent = top.name;
+    $("resultVerdict").textContent = top.verdict;
+    $("resultSummary").textContent = top.summary;
+    $("resultCost").textContent = top.costLead;
+    $("evidenceChips").innerHTML = evidence.slice(0,2).map(text => `<span>${text}</span>`).join("");
+    $("similarityTitle").textContent = top.similarityTitle;
+    $("similarityText").textContent = `${top.similarity}${evidence.length ? ` 你的选择中反复出现了“${evidence.join("”“")}”。` : ""}`;
+    $("costTitle").textContent = top.costTitle;
+    $("costText").textContent = top.cost;
+    $("roleCode").textContent = top.id.toUpperCase();
+    $("roleArchetype").textContent = top.archetype;
+    $("roleIntro").textContent = top.intro;
+    $("roleCreed").textContent = top.comment;
+    $("roleTimeline").innerHTML = top.timeline.map(text => `<li>${text}</li>`).join("");
+    $("alternativeRoles").innerHTML = result.ranked.slice(1,3).map((role, index) => `<article class="alternative-card"><img src="${role.asset}" alt="${role.alt}" loading="lazy"><div><span>${index === 0 ? "也很接近" : "还带有"}</span><h3>${role.name}</h3><p>${role.verdict}</p></div></article>`).join("");
+    $("continuationText").textContent = top.continuation;
+    renderDimensions(result.vector);
+    window.latestResult = `我的墙内人物档案：我更接近${top.name}——${top.verdict}。${top.share} 也有${result.ranked[1].short}与${result.ranked[2].short}的侧影。非官方同人娱乐测试。`;
+    localStorage.removeItem(storageKey);
+    $("resumeButton").hidden = true;
+    $("resultReveal").classList.remove("is-revealed");
+    showScreen("resultScreen");
+    requestAnimationFrame(() => $("resultReveal").classList.add("is-revealed"));
+  }
+  function showToast(text) {
+    $("toast").textContent = text; $("toast").classList.add("is-visible");
+    window.setTimeout(() => $("toast").classList.remove("is-visible"), 1900);
+  }
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
+    const chars = [...text]; let line = "", lines = [];
+    chars.forEach(char => { const test = line + char; if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = char; } else line = test; });
+    if (line) lines.push(line);
+    lines.slice(0,maxLines).forEach((value,index) => ctx.fillText(value, x, y + index * lineHeight));
+  }
+  async function saveResultCard() {
+    const top = state.result?.ranked[0]; if (!top) return;
+    const canvas = $("shareCanvas"), ctx = canvas.getContext("2d");
+    const image = new Image(); image.src = top.asset; await image.decode();
+    ctx.clearRect(0,0,1080,1440); ctx.fillStyle = "#18221b"; ctx.fillRect(0,0,1080,1440);
+    ctx.strokeStyle = top.accent; ctx.lineWidth = 8; ctx.strokeRect(40,40,1000,1360);
+    ctx.fillStyle = "#c8a66a"; ctx.font = "700 28px sans-serif"; ctx.fillText("墙内人物档案 · 非官方同人测试",80,105);
+    const box = {x:135,y:135,w:810,h:700}; const scale = Math.min(box.w/image.width,box.h/image.height); const w=image.width*scale,h=image.height*scale;
+    ctx.save(); ctx.shadowColor="rgba(0,0,0,.45)"; ctx.shadowBlur=32; ctx.drawImage(image,box.x+(box.w-w)/2,box.y+(box.h-h)/2,w,h); ctx.restore();
+    ctx.fillStyle = "#f4eedf"; ctx.font = "700 68px Georgia, serif"; ctx.fillText(top.name,80,930);
+    ctx.fillStyle = top.accent; ctx.font = "700 38px sans-serif"; wrapCanvasText(ctx,top.verdict,80,995,920,50,2);
+    ctx.fillStyle = "#d9d1c1"; ctx.font = "30px sans-serif"; wrapCanvasText(ctx,top.summary,80,1110,920,48,4);
+    ctx.fillStyle = "#8e978e"; ctx.font = "24px monospace"; ctx.fillText("WALL CHARACTER ARCHIVE / 2026",80,1360);
+    canvas.toBlob(blob => { if (!blob) return showToast("结果卡生成失败"); const url=URL.createObjectURL(blob); const link=document.createElement("a"); link.href=url; link.download=`墙内人物档案-${top.short}.png`; link.click(); URL.revokeObjectURL(url); showToast("结果卡已保存"); },"image/png");
+  }
+  $("startButton").addEventListener("click", () => startQuiz(false));
+  $("resumeButton").addEventListener("click", () => startQuiz(true));
+  $("prevButton").addEventListener("click", () => { if (state.index > 0) { state.index--; renderQuestion(); saveState(); } });
+  $("nextButton").addEventListener("click", () => { if (state.answers[state.index] === null) return; if (state.index < questions.length - 1) { state.index++; renderQuestion(); saveState(); } else renderResults(); });
+  $("exitButton").addEventListener("click", () => { saveState(); showScreen("introScreen"); });
+  $("restartButton").addEventListener("click", () => startQuiz(false));
+  $("saveCardButton").addEventListener("click", saveResultCard);
+  $("copyButton").addEventListener("click", async () => { try { await navigator.clipboard.writeText(window.latestResult); showToast("结果文案已复制"); } catch { showToast("复制失败，请手动选择文字"); } });
+  document.querySelector(".brand").addEventListener("click", event => { event.preventDefault(); showScreen("introScreen"); });
+  document.addEventListener("keydown", event => { if (!$("quizScreen").classList.contains("is-active")) return; const number=Number(event.key); if (number>=1 && number<=4) { const input=$(`answer-${number-1}`); input.checked=true; input.dispatchEvent(new Event("change",{bubbles:true})); } if (event.key==="Enter" && !$("nextButton").disabled) $("nextButton").click(); });
+  try { const saved=JSON.parse(localStorage.getItem(storageKey)); if (saved && Array.isArray(saved.answers) && saved.answers.length===questions.length) { state.index=Math.min(saved.index||0,questions.length-1); state.answers=saved.answers; $("resumeButton").hidden=!saved.answers.some(value=>value!==null); } } catch { localStorage.removeItem(storageKey); }
   const context = document.modelContext;
-  if (!context?.registerTool) return;
-  const controller = new AbortController();
-  const schema = {
-    type: "object",
-    properties: {
-      answers: {
-        type: "array",
-        description: "按题号排列的 20 个答案；0=非常不同意，1=比较不同意，2=不确定，3=比较同意，4=非常同意。",
-        minItems: questions.length,
-        maxItems: questions.length,
-        items: { type: "integer", minimum: 0, maximum: 4 }
-      }
-    },
-    required: ["answers"],
-    additionalProperties: false
-  };
-  try {
-    void Promise.resolve(context.registerTool({
-      name: "complete_character_questionnaire",
-      title: "完成角色匹配问卷",
-      description: "提交整套 20 题答案，更新页面并生成角色匹配结果。仅在用户明确给出每题答案后使用。",
-      inputSchema: schema,
-      annotations: { readOnlyHint: false, untrustedContentHint: false },
-      async execute(input) {
-        const answers = input?.answers;
-        if (!Array.isArray(answers) || answers.length !== questions.length || answers.some(v => !Number.isInteger(v) || v < 0 || v > 4)) {
-          throw new Error("answers 必须是由 20 个 0—4 整数组成的数组");
-        }
-        state.answers = answers.slice();
-        state.index = questions.length - 1;
-        renderResults();
-        const saved = JSON.parse(localStorage.getItem("wall-personality-result"));
-        return { status: "completed", top_role: saved.name, match_percent: saved.score, tags: saved.tags };
-      }
-    }, { signal: controller.signal })).catch(() => {});
-  } catch {}
+  if (context?.registerTool) {
+    try { void Promise.resolve(context.registerTool({ name:"complete_character_scenarios", title:"完成墙内人物选择", description:"提交 16 个处境选择并在页面显示人物档案。答案值为 0—3。", inputSchema:{type:"object",properties:{answers:{type:"array",minItems:questions.length,maxItems:questions.length,items:{type:"integer",minimum:0,maximum:3}}},required:["answers"],additionalProperties:false}, annotations:{readOnlyHint:false,untrustedContentHint:false}, async execute(input){ if(!Array.isArray(input?.answers)||input.answers.length!==questions.length||input.answers.some(value=>!Number.isInteger(value)||value<0||value>3)) throw new Error("answers 必须包含 16 个 0—3 的整数"); state.answers=input.answers.slice(); renderResults(); return {status:"completed",top_role:state.result.ranked[0].name,secondary_roles:state.result.ranked.slice(1,3).map(role=>role.name)}; } })).catch(()=>{}); } catch {}
+  }
 }
 
-registerWebTools();
+if (typeof document !== "undefined") browserApp();
+if (typeof module !== "undefined") module.exports = { questions, roles, dimensions, calculateResult };

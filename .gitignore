@@ -21,3 +21,7 @@ deep-research-report*.md
 desktop.png
 mobile.png
 result-*.png
+
+# Local source assets and visual QA captures
+/墙内人格档案_Q版十人素材包/
+/qa/*.png
