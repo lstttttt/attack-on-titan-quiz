@@ -4,29 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#151815">
-  <meta name="description" content="在 16 个墙内处境中作出选择，看看你的行动方式更接近哪位角色。非官方同人娱乐测试。">
-  <title>墙内人格档案｜非官方角色匹配测试</title>
+  <meta name="description" content="完成 16 个墙内处境，看看你的选择方式与《进击的巨人》十位角色中的谁更接近。非官方同人娱乐测试，答案保存在当前设备。">
+  <title>进击的巨人｜墙内人物侧影测试</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151815'/%3E%3Cpath d='M14 18h36v8H14zm4 14h28v8H18zm6 14h16v6H24z' fill='%23c8a66a'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="page-shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="返回测试首页"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span><strong>墙内人格档案</strong><small>UNOFFICIAL CHARACTER ARCHIVE</small></span></a>
+      <a class="brand" href="#" aria-label="返回测试首页"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span><strong>进击的巨人 · 人物侧影档案</strong><small>UNOFFICIAL CHARACTER ARCHIVE</small></span></a>
       <button class="soundless-button" id="resumeButton" type="button" hidden>继续上次选择</button>
     </header>
     <main id="app" aria-live="polite">
       <section class="screen intro-screen is-active" id="introScreen">
         <div class="intro-copy">
-          <p class="eyebrow"><span></span> 墙内人物档案 · 非官方同人测试</p>
+          <p class="eyebrow"><span></span> 《进击的巨人》非官方同人测试</p>
           <h1>如果身处墙内，<br><em>你会怎样作出选择？</em></h1>
-          <p class="lead">在同伴、未知和必须承担的决定之间，看看你的选择更接近谁。每个选项都有理由，也都有代价。</p>
-          <div class="intro-actions"><button class="primary-button" id="startButton" type="button">开始测试</button><p><strong>16 个处境 · 约 5 分钟</strong><span>无标准答案，进度只保存在当前设备</span></p></div>
+          <p class="lead">从一次巡逻、一次隐瞒，到一项必须承担的决定，16 个场景会把你的选择与十位角色的行事方式对照。它不是知识问答，也没有标准答案。</p>
+          <div class="intro-actions"><button class="primary-button" id="startButton" type="button">开始测试</button><p><strong>16 个处境 · 约 5 分钟</strong><span>进度仅保存在当前设备</span></p></div>
+          <p class="spoiler-notice">人物经历含动画中后期剧情；结果页时间线默认折叠。</p>
         </div>
         <aside class="dossier-card locked-dossier" aria-label="未解锁人物档案预览">
           <div class="dossier-head"><span>FILE / UNKNOWN</span><span class="stamp">未解锁</span></div>
           <div class="locked-portrait" aria-hidden="true"><img src="assets/chibi/armin.png" alt=""><span class="scan-line"></span><strong>?</strong></div>
-          <dl><div><dt>观察范围</dt><dd>行动 · 责任 · 求知 · 信任</dd></div><div><dt>候选档案</dt><dd>10 位角色</dd></div><div><dt>揭晓方式</dt><dd>首位角色 + 次近侧影</dd></div></dl>
+          <dl><div><dt>观察范围</dt><dd>行动 · 责任 · 求知 · 信任 · 边界</dd></div><div><dt>候选档案</dt><dd>10 位角色</dd></div><div><dt>揭晓方式</dt><dd>最接近角色 + 两个相近侧影</dd></div></dl>
           <div class="barcode" aria-hidden="true"></div>
         </aside>
       </section>
@@ -34,13 +35,14 @@
       <section class="screen quiz-screen" id="quizScreen" aria-labelledby="questionText">
         <aside class="quiz-meta">
           <div class="progress-number"><strong id="currentNumber">01</strong><span>/ 16</span></div><div class="progress-track" aria-hidden="true"><span id="progressBar"></span></div><p id="dimensionLabel">行动与风险</p>
-          <div class="field-note"><span>选择提示</span><p>选你最可能做的事，而不是看起来最正确的事。</p></div>
+          <div class="field-note"><span>选择提示</span><p>选你更可能做的事，而不是你认为最正确的事。</p></div>
         </aside>
         <div class="question-panel">
-          <div class="question-topline"><span id="questionCode">SCENE-01</span><button class="text-button" id="exitButton" type="button">暂存并退出</button></div>
-          <h2 id="questionText"></h2>
+          <div class="question-topline"><span id="questionCode">处境 01 / 16</span><button class="text-button" id="exitButton" type="button">暂存并返回</button></div>
+          <p class="mobile-field-note">选你更可能做的事，而不是你认为最正确的事。</p>
+          <h2 id="questionText" tabindex="-1"></h2>
           <fieldset class="answer-list scenario-options" id="answerList"><legend class="sr-only">请选择你最可能采取的行动</legend></fieldset>
-          <div class="quiz-footer"><button class="secondary-button" id="prevButton" type="button">上一题</button><span>键盘可按 1—4 快速选择，Enter 继续</span><button class="primary-button compact" id="nextButton" type="button" disabled>下一题</button></div>
+          <div class="quiz-footer"><button class="secondary-button" id="prevButton" type="button">上一题</button><span>键盘可按 1—4 选择，Enter 继续</span><button class="primary-button compact" id="nextButton" type="button" disabled>下一题</button></div>
         </div>
       </section>
 
@@ -48,23 +50,23 @@
         <div class="result-reveal" id="resultReveal">
           <div class="character-stage" id="characterStage"><div class="character-plate" aria-hidden="true"></div><div class="file-cover" aria-hidden="true"><span>ARCHIVE / OPEN</span></div><img id="resultCharacter" src="" alt="" width="1024" height="1536"><span class="character-shadow" aria-hidden="true"></span></div>
           <div class="result-copy">
-            <p class="eyebrow"><span></span> 你的角色侧影</p><p class="result-kicker">你更接近</p><h1 id="resultTitle"></h1><h2 id="resultVerdict"></h2><p class="result-summary" id="resultSummary"></p><p class="result-cost" id="resultCost"></p><div class="evidence-chips" id="evidenceChips"></div>
+            <p class="eyebrow"><span></span> 你的作答，照见一种行事方式</p><p class="result-kicker">本次选择最接近</p><h1 id="resultTitle" tabindex="-1"></h1><h2 id="resultVerdict"></h2><p class="result-summary" id="resultSummary"></p><p class="result-cost" id="resultCost"></p><div class="hero-evidence"><strong>本次作答依据</strong><p id="evidenceLead"></p><div class="evidence-chips" id="evidenceChips"></div></div>
           </div>
         </div>
-        <nav class="result-nav compact-result-nav" aria-label="结果页导航"><a href="#dossierSection">人物档案</a><a href="#analysisSection">更多分析</a></nav>
+        <nav class="result-nav compact-result-nav" aria-label="结果页导航"><a href="#dossierSection">人物档案</a><a href="#echoesSection">相近侧影</a><a href="#continuationSection">如果故事继续</a><a href="#analysisSection">计分说明</a></nav>
         <div class="result-content streamlined-result">
           <section class="report-section" id="dossierSection">
-            <div class="section-heading"><span>01 / DOSSIER</span><div><h2>人物档案</h2><p>你们相似的不是标签，而是在压力里反复作出的选择。</p></div></div>
-            <div class="story-grid"><article class="story-card"><span>相似之处</span><h3 id="similarityTitle"></h3><p id="similarityText"></p></article><article class="story-card contrast"><span>差异与代价</span><h3 id="costTitle"></h3><p id="costText"></p></article></div>
+            <div class="section-heading"><span>01 / DOSSIER</span><div><h2>人物档案</h2><p>相似的不是命运，而是几次相似处境里呈现出的行事方式。</p></div></div>
+            <div class="story-grid"><article class="story-card"><span>与你相近的选择方式</span><h3 id="similarityTitle"></h3><p id="similarityText"></p><div class="dossier-evidence" id="dossierEvidence"></div></article><article class="story-card contrast"><span>相似之外的代价</span><h3 id="costTitle"></h3><p id="costText"></p></article></div>
             <article class="role-file-card"><div><p class="archive-label">SUBJECT / <span id="roleCode"></span></p><h3 id="roleArchetype"></h3><p id="roleIntro"></p></div><div class="archive-comment"><span>档案评语</span><p id="roleCreed"></p></div></article>
-            <details class="timeline-panel"><summary><span>查看关键经历</span><small>包含后期剧情</small></summary><ol class="role-timeline" id="roleTimeline"></ol></details>
+            <details class="timeline-panel" id="timelinePanel"><summary><span>查看人物经历</span><small>含动画中后期剧情，展开前请留意剧透。</small></summary><ol class="role-timeline" id="roleTimeline"></ol></details>
           </section>
-          <section class="report-section alternatives-section"><div class="section-heading"><span>02 / ECHOES</span><div><h2>你也有这些角色的侧影</h2><p>次近角色不是第二名，而是你在另一种处境中可能采取的姿态。</p></div></div><div class="alternative-roles" id="alternativeRoles"></div></section>
-          <section class="report-section continuation-section"><div class="section-heading"><span>03 / NEXT</span><div><h2>如果故事继续</h2></div></div><div class="continuation-note"><p id="continuationText"></p></div></section>
-          <details class="analysis-panel" id="analysisSection"><summary><span>查看选择分析</span><small>维度、计分方法与说明</small></summary><div class="analysis-body"><div class="dimension-list" id="dimensionList"></div><div class="method-copy"><h3>结果如何得出</h3><p>每个处境的四种行动分别连接到不同角色倾向和六项选择维度。系统综合 16 次选择，比较角色关联与行动轮廓；同分时按角色关联次数、再按轮廓接近程度排序。</p><p>页面不显示“像某角色多少百分比”，因为这些分数不是概率，也未经过心理量表校准。本测试是非官方同人娱乐内容，不代表正式心理测评或官方设定结论。</p></div></div></details>
+          <section class="report-section alternatives-section" id="echoesSection"><div class="section-heading"><span>02 / ECHOES</span><div><h2>你也带有这些角色的侧影</h2><p>相近角色表示另一部分选择也与其行事方式相似，不代表第二名就是你的另一种人格。</p></div></div><div class="alternative-roles" id="alternativeRoles"></div></section>
+          <section class="report-section continuation-section" id="continuationSection"><div class="section-heading"><span>03 / NEXT</span><div><h2>如果故事继续</h2></div></div><div class="continuation-note"><p id="continuationText"></p></div></section>
+          <details class="analysis-panel" id="analysisSection"><summary><span>查看选择轮廓与计分说明</span><small>本次答案，不是稳定人格判断</small></summary><div class="analysis-body"><div><h3>本次选择轮廓</h3><p class="analysis-note">六项选择轮廓概括的是本次答案中较常呈现的做法，不是对你稳定人格的判断。它们用于解释结果与处理并列，不会显示成角色相似度百分比。</p><div class="dimension-list" id="dimensionList"></div></div><div class="method-copy"><h3>结果如何得出</h3><p>本测试先按你明确选到各角色的次数排序；出现并列时，再比较六项选择轮廓与角色档案的接近程度。每个选项只关联一个主要角色，不把同一次选择重复计入两个人。结果仅用于本次娱乐性角色比较，不是心理量表，也不代表你与角色的相似概率。</p></div></div></details>
         </div>
         <div class="result-actions"><button class="primary-button" id="saveCardButton" type="button">保存结果卡</button><button class="secondary-button" id="copyButton" type="button">复制结果文案</button><button class="secondary-button" id="restartButton" type="button">重新测试</button></div>
-        <p class="disclaimer">非官方同人娱乐测试。人物与作品名称归原权利人所有；Q 版素材为生成式创作候选稿，不暗示官方授权。</p>
+        <p class="disclaimer">本测试为《进击的巨人》非官方同人娱乐内容，不提供心理诊断。作品及角色属于原权利人；页面插画为非官方同人创作。</p>
       </section>
     </main>
     <footer class="site-footer"><span>WALL CHARACTER ARCHIVE</span><span>UNOFFICIAL FAN PROJECT · 2026</span></footer>
