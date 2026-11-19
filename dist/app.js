@@ -1,4 +1,4 @@
-const questions = [
+const legacyQuestions = [
   {
     "number": 1,
     "title": "行动与责任",
@@ -449,8 +449,20 @@ const questions = [
   }
 ];
 
+const launchCopy = typeof module !== "undefined" ? require("./copy.js") : characterQuizCopy;
+
+// Saved legacy runs keep the old wording. Both versions use the same option-to-role mapping.
+const launchQuestions = new Map(launchCopy.questions.map(question => [question.id, question]));
+const questions = legacyQuestions.map(question => {
+  const copy = launchQuestions.get(question.number);
+  return {
+    ...question,
+    text: copy.scene,
+    options: question.options.map((option, index) => ({ ...option, text: copy.options[index] }))
+  };
+});
+
 const dimensions = ["action","planning","collective","inquiry","flexibility","trust"];
-const dimensionNames = { action:"行动倾向", planning:"计划判断", collective:"群体责任", inquiry:"求知与核实", flexibility:"调整能力", trust:"信任与边界" };
 
 const roles = [
   {
@@ -811,157 +823,402 @@ function calculateResult(answers) {
 
 function browserApp() {
   const $ = id => document.getElementById(id);
-  const screens = ["introScreen","quizScreen","resultScreen"];
-  const state = { index:0, answers:Array(questions.length).fill(null), result:null };
-  const storageKey = "wall-character-choices-v3";
+  const { ui } = launchCopy;
+  const screens = ["introScreen", "quizScreen", "resultScreen"];
+  const storageKeys = {
+    latest: "wall-character-choices-v4",
+    legacy: "wall-character-choices-v3"
+  };
+  const length = questions.length;
+  let draft = readDraft("latest") ?? readDraft("legacy");
+  let run = null;
+
+  document.title = ui.pageTitle;
+  for (const element of document.querySelectorAll("[data-ui]")) {
+    element.textContent = ui[element.dataset.ui];
+  }
+
+  function isAnswer(value) {
+    return Number.isInteger(value) && value >= 0 && value < 4;
+  }
+
+  function readDraft(version) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKeys[version]));
+      const answers = saved?.answers;
+      if (!Array.isArray(answers) || answers.length !== length ||
+          !answers.every(answer => answer === null || isAnswer(answer)) ||
+          !answers.some(isAnswer)) return null;
+
+      const firstUnanswered = answers.indexOf(null);
+      const lastReachable = firstUnanswered === -1 ? length - 1 : firstUnanswered;
+      const index = Number.isInteger(saved.index) ? saved.index : 0;
+      return { version, index: Math.min(Math.max(index, 0), lastReachable), answers, persisted: true };
+    } catch {
+      return null;
+    }
+  }
+
+  function saveDraft() {
+    if (!run.answers.some(isAnswer)) return;
+    draft = run;
+    const { version, index, answers } = run;
+    try {
+      localStorage.setItem(storageKeys[version], JSON.stringify({ index, answers }));
+      draft.persisted = true;
+    } catch {
+      draft.persisted = false;
+    }
+  }
+
+  function clearDrafts() {
+    draft = null;
+    try {
+      localStorage.removeItem(storageKeys.latest);
+      localStorage.removeItem(storageKeys.legacy);
+    } catch {}
+  }
+
+  function updateIntro() {
+    $("startButton").textContent = draft ? ui.resume : ui.start;
+    $("draftActions").hidden = !draft;
+    $("localProgress").hidden = !draft?.persisted;
+  }
 
   function showScreen(id) {
-    screens.forEach(name => $(name).classList.toggle("is-active", name === id));
-    window.scrollTo({ top:0, behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    requestAnimationFrame(() => {
-      const focusTarget = id === "quizScreen" ? $("questionText") : id === "resultScreen" ? $("resultTitle") : $("startButton");
-      focusTarget?.focus({ preventScroll:true });
-    });
+    for (const screen of screens) $(screen).hidden = screen !== id;
+    const focusId = { introScreen: "startButton", quizScreen: "questionText", resultScreen: "resultTitle" };
+    window.scrollTo(0, 0);
+    $(focusId[id]).focus({ preventScroll: true });
   }
-  function saveState() {
-    try { localStorage.setItem(storageKey, JSON.stringify({ index:state.index, answers:state.answers })); } catch {}
-    $("resumeButton").hidden = !state.answers.some(value => value !== null);
+
+  function showIntro() {
+    if (run && !$("quizScreen").hidden) saveDraft();
+    updateIntro();
+    showScreen("introScreen");
   }
+
   function renderQuestion() {
-    const question = questions[state.index];
-    $("currentNumber").textContent = String(state.index + 1).padStart(2,"0");
-    $("currentNumber").nextElementSibling.textContent = `/ ${questions.length}`;
-    $("progressBar").style.width = `${((state.index + 1) / questions.length) * 100}%`;
-    $("dimensionLabel").textContent = question.dimension;
-    $("questionCode").textContent = `处境 ${String(state.index + 1).padStart(2,"0")} / ${questions.length}`;
+    const quiz = run.version === "legacy" ? legacyQuestions : questions;
+    const question = quiz[run.index];
+    $("currentNumber").textContent = String(run.index + 1).padStart(2, "0") + " / " + length;
+    $("progressBar").style.width = ((run.index + 1) / length * 100) + "%";
     $("questionText").textContent = question.text;
-    $("answerList").innerHTML = question.options.map((option, index) => `<div class="answer-option"><input type="radio" name="answer" id="answer-${index}" value="${index}" ${state.answers[state.index] === index ? "checked" : ""}><label for="answer-${index}"><span class="option-key">${index + 1}</span><strong>${option.text}</strong><span class="selected-mark" aria-hidden="true">已选择</span></label></div>`).join("");
-    $("answerList").querySelectorAll("input").forEach(input => input.addEventListener("change", event => {
-      state.answers[state.index] = Number(event.target.value);
-      $("nextButton").disabled = false;
-      $("nextButton").textContent = state.index === questions.length - 1 ? "查看人物档案" : "下一题";
-      saveState();
-    }));
-    $("prevButton").disabled = state.index === 0;
-    $("nextButton").disabled = state.answers[state.index] === null;
-    $("nextButton").textContent = state.index === questions.length - 1 ? "查看人物档案" : "下一题";
-  }
-  function startQuiz(resume = false) {
-    if (!resume) {
-      state.index = 0;
-      state.answers = Array(questions.length).fill(null);
-      try { localStorage.removeItem("wall-character-choices-v2"); } catch {}
-    }
-    showScreen("quizScreen"); renderQuestion(); saveState();
-  }
-  function evidenceFor(roleId) {
-    return questions.map((question, index) => ({
-      questionIndex:index + 1,
-      title:question.title,
-      question:question.text,
-      selectedAnswer:question.options[state.answers[index]]?.text,
-      signal:question.options[state.answers[index]]?.signal,
-      roleId:question.options[state.answers[index]]?.roleId
-    })).filter(item => item.roleId === roleId).slice(0,3);
-  }
-  function evidenceExplanation(role, item) {
-    return `这一选择与“${role.similarityTitle}”的行事方式相近。`;
-  }
-  function fullEvidenceMarkup(role, item) {
-    return `<article class="evidence-item"><span>第 ${String(item.questionIndex).padStart(2,"0")} 题 · ${item.title}</span><p>${item.selectedAnswer}</p><small>${evidenceExplanation(role, item)}</small></article>`;
-  }
-  function renderDimensions(vector) {
-    $("dimensionList").innerHTML = dimensions.map(dim => `<div class="dimension-row"><strong>${dimensionNames[dim]}</strong><div class="dimension-meter" aria-hidden="true"><i style="width:${Math.round(vector[dim] * 100)}%"></i></div><span>${vector[dim] >= .72 ? "本次较常出现" : vector[dim] >= .52 ? "部分场景出现" : "本次较少出现"}</span></div>`).join("");
-  }
-  function renderResults() {
-    const result = calculateResult(state.answers);
-    state.result = result;
-    const top = result.ranked[0];
-    const evidence = evidenceFor(top.id);
-    document.documentElement.style.setProperty("--role-accent", top.accent);
-    $("resultCharacter").src = top.asset;
-    $("resultCharacter").alt = top.alt;
-    $("resultTitle").textContent = top.name;
-    $("resultVerdict").textContent = top.verdict;
-    $("resultSummary").textContent = top.summary;
-    $("resultCost").textContent = top.costLead;
-    $("evidenceLead").textContent = evidence.length >= 2 ? "以下选择共同构成了这次角色侧影：" : "有一处选择与你的角色侧影相近：";
-    $("evidenceChips").innerHTML = evidence.slice(0,2).map(item => `<span>第 ${String(item.questionIndex).padStart(2,"0")} 题 · ${item.title}：${item.selectedAnswer}</span>`).join("");
-    $("similarityTitle").textContent = top.similarityTitle;
-    $("similarityText").textContent = top.similarity;
-    $("dossierEvidence").innerHTML = evidence.slice(2).map(item => fullEvidenceMarkup(top, item)).join("");
-    $("costTitle").textContent = top.costTitle;
-    $("costText").textContent = top.cost;
-    $("roleCode").textContent = top.id.toUpperCase();
-    $("roleArchetype").textContent = top.archetype;
-    $("roleIntro").textContent = top.intro;
-    $("roleCreed").textContent = top.comment;
-    $("roleTimeline").innerHTML = top.timeline.map(text => `<li>${text}</li>`).join("");
-    $("alternativeRoles").innerHTML = result.ranked.slice(1,3).map(role => {
-      const item = evidenceFor(role.id)[0];
-      const reason = item ? `第 ${String(item.questionIndex).padStart(2,"0")} 题中，你选择了“${item.selectedAnswer}”` : "直接关联不多；六项选择轮廓与该角色的行事方式较接近。";
-      return `<article class="alternative-card"><img src="${role.asset}" alt="${role.alt}" loading="lazy"><div><span>相近侧影</span><h3>${role.name}</h3><p class="alternative-verdict">${role.verdict}</p><small>${reason}</small></div></article>`;
-    }).join("");
-    $("continuationText").textContent = top.continuation;
-    renderDimensions(result.vector);
-    window.latestResult = `${top.share} 本次作答中，${result.ranked[1].short}与${result.ranked[2].short}也是相近侧影。非官方同人娱乐测试。`;
-    try { localStorage.removeItem(storageKey); } catch {}
-    $("resumeButton").hidden = true;
-    $("timelinePanel").open = false;
-    $("resultReveal").classList.remove("is-revealed","is-opened");
-    showScreen("resultScreen");
-    requestAnimationFrame(() => {
-      $("resultReveal").classList.add("is-revealed");
-      window.setTimeout(() => $("resultReveal").classList.add("is-opened"), 850);
+
+    const options = question.options.map((option, index) => {
+      const row = document.createElement("div");
+      row.className = "answer-option";
+      const id = "answer-" + index;
+      row.innerHTML = '<input type="radio" name="answer" id="' + id + '" value="' + index + '">' +
+        '<label for="' + id + '"><span class="option-key" aria-hidden="true">' + (index + 1) + '</span>' +
+        '<span class="option-text"></span><span class="selected-mark" aria-hidden="true">✓</span></label>';
+      row.firstElementChild.checked = run.answers[run.index] === index;
+      row.querySelector(".option-text").textContent = option.text;
+      return row;
     });
+    const answerList = $("answerList");
+    answerList.replaceChildren(answerList.querySelector("legend"), ...options);
+    $("prevButton").disabled = run.index === 0;
+    $("nextButton").disabled = run.answers[run.index] === null;
+    $("nextButton").textContent = run.index === length - 1 ? ui.reveal : ui.next;
   }
-  function showToast(text) {
-    $("toast").textContent = text; $("toast").classList.add("is-visible");
-    window.setTimeout(() => $("toast").classList.remove("is-visible"), 1900);
-  }
-  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
-    const chars = [...text]; let line = "", lines = [];
-    chars.forEach(char => { const test = line + char; if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = char; } else line = test; });
-    if (line) lines.push(line);
-    lines.slice(0,maxLines).forEach((value,index) => ctx.fillText(value, x, y + index * lineHeight));
-  }
-  async function saveResultCard() {
-    const top = state.result?.ranked[0]; if (!top) return;
-    const canvas = $("shareCanvas"), ctx = canvas.getContext("2d");
-    const image = new Image(); image.src = top.asset; await image.decode();
-    ctx.clearRect(0,0,1080,1440); ctx.fillStyle = "#18221b"; ctx.fillRect(0,0,1080,1440);
-    ctx.strokeStyle = top.accent; ctx.lineWidth = 8; ctx.strokeRect(40,40,1000,1360);
-    ctx.fillStyle = "#c8a66a"; ctx.font = "700 28px sans-serif"; ctx.fillText("进击的巨人 · 人物侧影档案",80,105);
-    const box = {x:135,y:135,w:810,h:700}; const scale = Math.min(box.w/image.width,box.h/image.height); const w=image.width*scale,h=image.height*scale;
-    ctx.save(); ctx.shadowColor="rgba(0,0,0,.45)"; ctx.shadowBlur=32; ctx.drawImage(image,box.x+(box.w-w)/2,box.y+(box.h-h)/2,w,h); ctx.restore();
-    ctx.fillStyle = "#f4eedf"; ctx.font = "700 68px Georgia, serif"; ctx.fillText(top.name,80,930);
-    ctx.fillStyle = top.accent; ctx.font = "700 38px sans-serif"; wrapCanvasText(ctx,top.verdict,80,995,920,50,2);
-    ctx.fillStyle = "#d9d1c1"; ctx.font = "30px sans-serif"; wrapCanvasText(ctx,top.summary,80,1110,920,48,4);
-    ctx.fillStyle = "#8e978e"; ctx.font = "24px monospace"; ctx.fillText("WALL CHARACTER ARCHIVE / 2026",80,1360);
-    canvas.toBlob(blob => { if (!blob) return showToast("结果卡生成失败"); const url=URL.createObjectURL(blob); const link=document.createElement("a"); link.href=url; link.download=`墙内人物档案-${top.short}.png`; link.click(); URL.revokeObjectURL(url); showToast("结果卡已保存"); },"image/png");
-  }
-  $("startButton").addEventListener("click", () => startQuiz(false));
-  $("resumeButton").addEventListener("click", () => startQuiz(true));
-  $("prevButton").addEventListener("click", () => { if (state.index > 0) { state.index--; renderQuestion(); saveState(); } });
-  $("nextButton").addEventListener("click", () => { if (state.answers[state.index] === null) return; if (state.index < questions.length - 1) { state.index++; renderQuestion(); saveState(); } else renderResults(); });
-  $("exitButton").addEventListener("click", () => { saveState(); showScreen("introScreen"); });
-  $("restartButton").addEventListener("click", () => startQuiz(false));
-  $("saveCardButton").addEventListener("click", saveResultCard);
-  $("copyButton").addEventListener("click", async () => { try { await navigator.clipboard.writeText(window.latestResult); showToast("结果文案已复制"); } catch { showToast("复制失败，请手动选择文字"); } });
-  document.querySelector(".brand").addEventListener("click", event => { event.preventDefault(); showScreen("introScreen"); });
-  document.addEventListener("keydown", event => { if (!$("quizScreen").classList.contains("is-active")) return; const number=Number(event.key); if (number>=1 && number<=4) { const input=$(`answer-${number-1}`); input.checked=true; input.dispatchEvent(new Event("change",{bubbles:true})); } if (event.key==="Enter" && !$("nextButton").disabled) $("nextButton").click(); });
-  try {
-    const saved=JSON.parse(localStorage.getItem(storageKey));
-    const validAnswers=saved && Array.isArray(saved.answers) && saved.answers.length===questions.length && saved.answers.every(value => value === null || (Number.isInteger(value) && value >= 0 && value <= 3));
-    if (validAnswers) {
-      state.index=Math.min(Math.max(Number(saved.index)||0,0),questions.length-1);
-      state.answers=saved.answers;
-      $("resumeButton").hidden=!saved.answers.some(value=>value!==null);
+
+  function startQuiz(resume = false) {
+    if (resume && draft) {
+      run = draft;
+    } else {
+      clearDrafts();
+      run = { version: "latest", index: 0, answers: Array(length).fill(null) };
     }
-  } catch {}
+    resetResultView();
+    renderQuestion();
+    showScreen("quizScreen");
+  }
+
+  function moveToQuestion(index) {
+    run.index = index;
+    renderQuestion();
+    saveDraft();
+    window.scrollTo(0, 0);
+    $("questionText").focus({ preventScroll: true });
+  }
+
+  function finishQuiz(answers) {
+    const winnerId = calculateResult(answers).ranked[0].id;
+    run = null;
+    clearDrafts();
+    updateIntro();
+    renderResults(winnerId);
+    return winnerId;
+  }
+
+  let currentResult = null;
+  let cardImageDataRequest;
+
+  function writeParagraphs(id, paragraphs) {
+    const nodes = paragraphs.map(text => {
+      const paragraph = document.createElement("p");
+      paragraph.textContent = text;
+      return paragraph;
+    });
+    $(id).replaceChildren(...nodes);
+  }
+
+  function writeResultName(name) {
+    const title = $("resultTitle");
+    const separator = name.indexOf("·");
+    if (separator === -1) {
+      title.textContent = name;
+      return;
+    }
+    const givenName = document.createElement("span");
+    const familyName = document.createElement("span");
+    givenName.className = familyName.className = "name-part";
+    givenName.textContent = name.slice(0, separator);
+    familyName.textContent = name.slice(separator);
+    title.replaceChildren(givenName, document.createElement("wbr"), familyName);
+  }
+
+  function resetResultView() {
+    currentResult = null;
+    window.latestResult = "";
+    $("spoilerPanel").open = false;
+    $("copyFallback").hidden = true;
+    $("copyText").value = "";
+    $("saveCardButton").disabled = false;
+    $("toast").textContent = "";
+  }
+
+  function renderResults(roleId) {
+    resetResultView();
+    const art = roleMap[roleId];
+    const copy = launchCopy.roles[roleId];
+    const shareText = ui.shareTemplate.replace(/\{(name|lead)\}/g, (_, field) => copy[field]);
+    currentResult = { art, copy, shareText };
+
+    const screen = $("resultScreen");
+    screen.dataset.role = roleId;
+    screen.style.setProperty("--role-accent", art.accent);
+    const portrait = $("resultCharacter");
+    portrait.alt = copy.name;
+    portrait.src = art.asset;
+    writeResultName(copy.name);
+    $("resultLead").textContent = copy.lead;
+    $("portraitTitle").textContent = copy.portraitTitle;
+    writeParagraphs("readerText", copy.reader);
+    writeParagraphs("portraitText", copy.portrait);
+    writeParagraphs("spoilerText", copy.spoiler);
+
+    window.latestResult = shareText;
+    showScreen("resultScreen");
+  }
+
+  async function copyResult() {
+    const result = currentResult;
+    if (!result) return;
+
+    const status = $("toast");
+    status.textContent = "";
+    try {
+      await navigator.clipboard.writeText(result.shareText);
+      if (currentResult !== result) return;
+      if (!$("copyFallback").hidden && $("copyText") === document.activeElement) $("copyButton").focus();
+      $("copyFallback").hidden = true;
+      status.textContent = ui.copied;
+    } catch {
+      if (currentResult !== result) return;
+      $("copyFallback").hidden = false;
+      const field = $("copyText");
+      field.value = result.shareText;
+      field.focus();
+      field.select();
+    }
+  }
+
+  async function getCardImageSource(art) {
+    if (location.protocol !== "file:") return art.asset;
+
+    // Local image URLs display in file pages, but the browser taints a canvas that draws them.
+    cardImageDataRequest ??= new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "assets/chibi-card-data.js";
+      script.onload = () => {
+        script.remove();
+        if (window.characterCardImageData) resolve(window.characterCardImageData);
+        else reject(new Error("Card image data did not load"));
+      };
+      script.onerror = () => {
+        script.remove();
+        reject(new Error("Card image data could not be loaded"));
+      };
+      document.head.append(script);
+    }).catch(error => {
+      cardImageDataRequest = undefined;
+      throw error;
+    });
+    const source = (await cardImageDataRequest)[art.id];
+    if (!source) throw new Error("Card image data is missing");
+    return source;
+  }
+
+  function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+    let line = "";
+    for (const character of text) {
+      const next = line + character;
+      // Allow closing punctuation to hang beyond the measure instead of starting a line.
+      if (line && ctx.measureText(next).width > maxWidth && !/[，。！？；：、）》」”]/.test(character)) {
+        ctx.fillText(line, x, y);
+        y += lineHeight;
+        line = character;
+      } else {
+        line = next;
+      }
+    }
+    if (line) ctx.fillText(line, x, y);
+  }
+
+  async function saveResultCard() {
+    const result = currentResult;
+    if (!result) return;
+
+    const button = $("saveCardButton");
+    const status = $("toast");
+    const { art, copy } = result;
+    const paper = getComputedStyle($("resultScreen")).getPropertyValue("--role-paper").trim() || "#e1e5dc";
+    const serif = getComputedStyle($("resultTitle")).fontFamily;
+    const sans = getComputedStyle(button).fontFamily;
+    button.disabled = true;
+    status.textContent = "";
+
+    try {
+      const image = new Image();
+      image.src = await getCardImageSource(art);
+      await image.decode();
+      if (currentResult !== result) return;
+
+      const canvas = $("shareCanvas");
+      const ctx = canvas.getContext("2d");
+      const { width, height } = canvas;
+      ctx.fillStyle = "#f7f4eb";
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = paper;
+      ctx.fillRect(64, 64, width - 128, 700);
+      ctx.strokeStyle = art.accent;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(64, 64, width - 128, 700);
+
+      const scale = Math.min(700 / image.naturalWidth, 654 / image.naturalHeight);
+      const imageWidth = image.naturalWidth * scale;
+      const imageHeight = image.naturalHeight * scale;
+      ctx.drawImage(image, (width - imageWidth) / 2, 87 + (654 - imageHeight) / 2, imageWidth, imageHeight);
+
+      ctx.fillStyle = art.accent;
+      ctx.fillRect(92, 830, 68, 5);
+      ctx.textBaseline = "top";
+      ctx.fillStyle = "#24352e";
+      ctx.font = `700 76px ${serif}`;
+      ctx.fillText(copy.name, 92, 882, width - 184);
+
+      ctx.fillStyle = "#536057";
+      ctx.font = `40px ${serif}`;
+      drawWrappedText(ctx, copy.lead, 92, 998, width - 224, 66);
+
+      ctx.fillStyle = "#cbcfc1";
+      ctx.fillRect(92, 1286, width - 184, 2);
+      ctx.fillStyle = "#536057";
+      ctx.font = `28px ${sans}`;
+      ctx.fillText(ui.credit, 92, 1320, width - 184);
+
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      if (currentResult !== result) return;
+      if (!blob) throw new Error("PNG encoding failed");
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${copy.name}.png`;
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      status.textContent = ui.cardReady;
+    } catch {
+      if (currentResult === result) status.textContent = ui.cardError;
+    } finally {
+      if (currentResult === result) button.disabled = false;
+    }
+  }
+
+  $("saveCardButton").addEventListener("click", saveResultCard);
+  $("copyButton").addEventListener("click", copyResult);
+
+  $("startButton").addEventListener("click", () => startQuiz(true));
+  $("newRunButton").addEventListener("click", () => startQuiz());
+  $("exitButton").addEventListener("click", showIntro);
+  $("restartButton").addEventListener("click", () => startQuiz());
+  $("prevButton").addEventListener("click", () => {
+    if (run.index > 0) moveToQuestion(run.index - 1);
+  });
+  $("nextButton").addEventListener("click", () => {
+    if (run.answers[run.index] === null) return;
+    if (run.index === length - 1) finishQuiz(run.answers);
+    else moveToQuestion(run.index + 1);
+  });
+  $("answerList").addEventListener("change", event => {
+    run.answers[run.index] = Number(event.target.value);
+    $("nextButton").disabled = false;
+    saveDraft();
+  });
+
+  document.querySelector(".brand").addEventListener("click", event => {
+    event.preventDefault();
+    showIntro();
+  });
+  document.addEventListener("keydown", event => {
+    if ($("quizScreen").hidden || event.defaultPrevented || event.repeat || event.isComposing ||
+        event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (event.target.closest?.("textarea, select, [contenteditable], input:not([type=radio])")) return;
+
+    if (["1", "2", "3", "4"].includes(event.key)) {
+      event.preventDefault();
+      const input = $("answer-" + (Number(event.key) - 1));
+      input.focus();
+      input.click();
+    } else if (event.key === "Enter" && !event.target.closest?.("button, a[href], summary") && !$("nextButton").disabled) {
+      event.preventDefault();
+      $("nextButton").click();
+    }
+  });
+  updateIntro();
+
   const context = document.modelContext;
   if (context?.registerTool) {
-    try { void Promise.resolve(context.registerTool({ name:"complete_character_scenarios", title:"完成墙内人物选择", description:"提交 16 个处境选择并在页面显示人物档案。答案值为 0—3。", inputSchema:{type:"object",properties:{answers:{type:"array",minItems:questions.length,maxItems:questions.length,items:{type:"integer",minimum:0,maximum:3}}},required:["answers"],additionalProperties:false}, annotations:{readOnlyHint:false,untrustedContentHint:false}, async execute(input){ if(!Array.isArray(input?.answers)||input.answers.length!==questions.length||input.answers.some(value=>!Number.isInteger(value)||value<0||value>3)) throw new Error("answers 必须包含 16 个 0—3 的整数"); state.answers=input.answers.slice(); renderResults(); return {status:"completed",top_role:state.result.ranked[0].name,secondary_roles:state.result.ranked.slice(1,3).map(role=>role.name)}; } })).catch(()=>{}); } catch {}
+    try {
+      void Promise.resolve(context.registerTool({
+        name: "complete_character_scenarios",
+        title: ui.reveal,
+        description: "提交 16 个处境的选项索引（0–3），在页面显示匹配角色。",
+        inputSchema: {
+          type: "object",
+          properties: {
+            answers: {
+              type: "array", minItems: length, maxItems: length,
+              items: { type: "integer", minimum: 0, maximum: 3 }
+            }
+          },
+          required: ["answers"],
+          additionalProperties: false
+        },
+        annotations: { readOnlyHint: false, untrustedContentHint: false },
+        async execute(input) {
+          const answers = input?.answers;
+          if (!Array.isArray(answers) || answers.length !== length || !Array.from(answers).every(isAnswer)) {
+            throw new Error("answers 必须包含 16 个 0–3 的整数");
+          }
+          const id = finishQuiz(answers);
+          return { status: "completed", top_role: launchCopy.roles[id].name };
+        }
+      })).catch(() => {});
+    } catch {}
   }
 }
 
